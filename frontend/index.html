@@ -163,6 +163,20 @@
             &copy; 2025 MedStock — Sistemas de Informação Hospitalar. Todos os direitos reservados.
         </div>
     </footer>
+    <!--As fichas focam-se em HTML e CSS. Este JavaScript é uma adição ao projeto final para tornar o formulário funcional (mesmo que seja só uma simulação — não envia mesmo o email, apenas mostra um alert). É uma funcionalidade extra que vai além do conteúdo das fichas.
+        document.getElementById('formContacto').addEventListener('submit', function (e) {
+            e.preventDefault();
+            const nome = document.getElementById('nome').value.trim();
+            const email = document.getElementById('email').value.trim();
+            const mensagem = document.getElementById('mensagem').value.trim();
+            if (!nome || !email || !mensagem) {
+                alert('Por favor, preencha os campos obrigatórios: Nome, Email e Mensagem.');
+                return;
+            }
+            alert('Mensagem enviada com sucesso! Entraremos em contacto brevemente.');
+            this.reset();
+        });
+    </script>-->
 
 
 </body>

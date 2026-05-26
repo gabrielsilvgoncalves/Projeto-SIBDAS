@@ -1,1 +1,26 @@
-/* TODO: estilos */
+/* =========================================
+   Reset e Estilos Gerais
+   ========================================= */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: 'Poppins', Arial, Helvetica, sans-serif;
+}
+
+:root {
+    --verde: #00b8d9;
+    --verde-escuro: #007fa3;
+    --verde-muito-escuro: #004f63;
+    --cinza-claro: #f2f2f2;
+    --cinza-texto: #767676;
+    --texto-escuro: #424343;
+}
+
+html {
+    scroll-behavior: smooth;
+}
+
+section {
+    padding: 80px 20px;
+}
