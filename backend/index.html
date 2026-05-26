@@ -15,41 +15,64 @@
 
 <body>
 
-<!-- ===================== NAVBAR ===================== -->
-<nav class="bng-navbar">
-    <a href="#inicio" class="logo-area">
-        <img src="assets/img/Logo.png" alt="Logo MedStock">
-        <h3>MedStock</h3>
-    </a>
-    <div class="nav-links">
-        <a href="#inicio">Início</a>
-        <a href="#sobre-nos">Sobre nós</a>
-        <a href="#servicos">Serviços</a>
-        <a href="#contacto">Contacto</a>
+    <!-- ===================== NAVBAR ===================== -->
+    <nav class="bng-navbar">
+        <a href="#inicio" class="logo-area">
+            <img src="assets/img/Logo.png" alt="Logo MedStock">
+            <h3>MedStock</h3>
+        </a>
+        <div class="nav-links">
+            <a href="#inicio">Início</a>
+            <a href="#sobre-nos">Sobre nós</a>
+            <a href="#servicos">Serviços</a>
+            <a href="#contacto">Contacto</a>
+        </div>
+        <div class="nav-restrita">
+            <a href="../login/login.html"><i class="fa-solid fa-lock me-1"></i> Área Restrita</a>
+        </div>
+    </nav>
+
+    <!-- ===================== HERO ===================== -->
+    <section class="hero" id="inicio">
+        <div class="hero-overlay"></div>
+        <div class="hero-content">
+            <h1>Inventário Hospitalar<br>sob controlo</h1>
+            <p>
+                Centralize a gestão, garanta a rastreabilidade e simplifique a documentação
+                de todos os dispositivos médicos. A MedStock foi criada para equipas de
+                engenharia clínica que exigem rigor e eficiência.
+            </p>
+            <a href="#sobre-nos" class="btn-hero">Saiba mais</a>
+        </div>
+    </section>
+
+    <!-- ===================== SOBRE NÓS ===================== -->
+    <div id="sobre-nos">
+        <div class="texto">
+            <h2>Sobre nós</h2>
+            <p>
+                A <strong>MedStock</strong> nasceu da intersecção entre tecnologia de informação e a realidade
+                clínica diária. Compreendemos que a gestão de um parque tecnológico hospitalar vai muito além
+                de contar máquinas — trata-se de garantir que cada dispositivo está operacional, seguro e
+                calibrado para quando é mais necessário: no momento do cuidado ao doente.
+            </p>
+            <p>
+                A nossa plataforma web serve de base a futuras implementações de sistemas CMMS/GMAC,
+                apoiando o ciclo de vida completo dos equipamentos médicos: desde a aquisição até ao abate.
+            </p>
+            <a href="#contacto" class="btn-hero" style="margin-top: 10px; display: inline-block;">
+                Agende uma reunião
+            </a>
+        </div>
+        <div class="imagem">
+            <img src="assets/img/hospital.jpeg" alt="Hospital moderno">
+        </div>
     </div>
-    <div class="nav-restrita">
-        <a href="../login/login.html"><i class="fa-solid fa-lock me-1"></i> Área Restrita</a>
-    </div>
-</nav>
-
-<!-- ===================== HERO ===================== -->
-<section class="hero" id="inicio">
-    <div class="hero-overlay"></div>
-    <div class="hero-content">
-        <h1>Inventário Hospitalar<br>sob controlo</h1>
-        <p>
-            Centralize a gestão, garanta a rastreabilidade e simplifique a documentação
-            de todos os dispositivos médicos. A MedStock foi criada para equipas de
-            engenharia clínica que exigem rigor e eficiência.
-        </p>
-        <a href="#sobre-nos" class="btn-hero">Saiba mais</a>
-    </div>
-</section>
 
 
-    <!-- TODO: conteúdo da página -->
 
-    <script src="assets/bootstrap/bootstrap.bundle.min.js"></script>
+
 </body>
+
 
 </html>
