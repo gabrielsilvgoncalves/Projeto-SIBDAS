@@ -11,7 +11,8 @@
     <!-- Google Fonts: Poppins -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap"
+        rel="stylesheet">
 
     <!-- Font Awesome (CDN) -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
@@ -116,6 +117,30 @@
         </div>
     </section>
 
+    <!-- ===================== CONTACTO ===================== -->
+    <section id="contacto">
+        <h2>Contacto</h2>
+        <p class="subtitulo">Envie-nos uma mensagem e entraremos em contacto brevemente.</p>
+        <form class="form-contacto" id="formContacto" novalidate>
+            <label for="nome">Nome</label>
+            <input type="text" id="nome" name="nome" placeholder="O seu nome completo" required>
+
+            <label for="email">Email</label>
+            <input type="email" id="email" name="email" placeholder="email@exemplo.com" required>
+
+            <label for="telefone">Telefone</label>
+            <input type="tel" id="telefone" name="telefone" placeholder="+351 9xx xxx xxx">
+
+            <label for="mensagem">Mensagem</label>
+            <textarea id="mensagem" name="mensagem" rows="5" placeholder="Como podemos ajudar?" required></textarea>
+
+            <button type="submit" class="btn-form">
+                <i class="fa-solid fa-paper-plane me-2"></i> Enviar mensagem
+            </button>
+        </form>
+    </section>
+
 
 </body>
+
 </html>
