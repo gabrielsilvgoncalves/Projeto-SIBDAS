@@ -24,3 +24,170 @@ html {
 section {
     padding: 80px 20px;
 }
+
+/* =========================================
+   Barra de Navegação Principal
+   ========================================= */
+.bng-navbar {
+    background-color: var(--verde-muito-escuro);
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 0 40px;
+    position: sticky;
+    top: 0;
+    z-index: 1000;
+    height: 80px;
+}
+
+.bng-navbar .logo-area {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    text-decoration: none;
+}
+
+.bng-navbar .logo-area img {
+    height: 50px;
+}
+
+.bng-navbar .logo-area h3 {
+    color: #ffffff;
+    font-size: 1.4em;
+    font-weight: 700;
+    letter-spacing: 0.03em;
+}
+
+.bng-navbar .nav-links {
+    display: flex;
+    align-items: center;
+    gap: 30px;
+}
+
+.bng-navbar .nav-links a {
+    color: rgba(255, 255, 255, 0.75);
+    text-decoration: none;
+    font-size: 0.95em;
+    font-weight: 500;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    transition: color 0.3s;
+}
+
+.bng-navbar .nav-links a:hover {
+    color: #ffffff;
+}
+
+.bng-navbar .nav-restrita a {
+    color: #ffffff;
+    text-decoration: none;
+    font-size: 0.9em;
+    font-weight: 600;
+    padding: 10px 24px;
+    border-radius: 50px;
+    background-color: var(--verde);
+    transition: background-color 0.3s;
+}
+
+.bng-navbar .nav-restrita a:hover {
+    background-color: var(--verde-escuro);
+}
+
+/* =========================================
+   Hero / Banner Principal
+   ========================================= */
+.hero {
+    position: relative;
+    min-height: 600px;
+    display: flex;
+    align-items: center;
+    background-image: url('../img/hospital.jpeg');
+    background-size: cover;
+    background-position: center;
+    padding: 80px 80px;
+}
+
+.hero-overlay {
+    position: absolute;
+    inset: 0;
+    background-color: rgba(0, 79, 99, 0.88);
+}
+
+.hero-content {
+    position: relative;
+    z-index: 2;
+    max-width: 700px;
+}
+
+.hero-content h1 {
+    color: #ffffff;
+    font-size: 3.2em;
+    font-weight: 700;
+    text-transform: uppercase;
+    line-height: 1.2;
+    margin-bottom: 20px;
+}
+
+.hero-content p {
+    color: rgba(255, 255, 255, 0.85);
+    font-size: 1.15em;
+    font-weight: 400;
+    line-height: 1.7;
+    margin-bottom: 36px;
+    border-left: 4px solid var(--verde);
+    padding-left: 20px;
+}
+
+.btn-hero {
+    display: inline-block;
+    background-color: var(--verde);
+    color: #ffffff;
+    text-decoration: none;
+    padding: 14px 36px;
+    border-radius: 50px;
+    font-size: 1em;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+    transition: background-color 0.3s, padding-right 0.3s;
+}
+
+.btn-hero:hover {
+    background-color: var(--verde-escuro);
+    padding-right: 44px;
+}
+
+/* =========================================
+   Seção Sobre Nós
+   ========================================= */
+#sobre-nos {
+    background-color: #ffffff;
+    max-width: 1100px;
+    margin: 0 auto;
+    padding: 80px 40px;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 60px;
+    align-items: center;
+}
+
+#sobre-nos .texto h2 {
+    font-size: 2em;
+    color: var(--verde-muito-escuro);
+    margin-bottom: 20px;
+    text-transform: uppercase;
+}
+
+#sobre-nos .texto p {
+    color: var(--texto-escuro);
+    font-size: 1em;
+    line-height: 1.8;
+    margin-bottom: 14px;
+}
+
+#sobre-nos .imagem img {
+    width: 100%;
+    border-radius: 6px;
+    box-shadow: 6px 6px 0px rgba(0, 184, 217, 0.3);
+}
+
