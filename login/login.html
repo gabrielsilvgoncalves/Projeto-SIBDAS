@@ -27,17 +27,17 @@
                 <div class="card p-4">
                     <div>
                         <!-- Imagem do Medstock + texto -->
-                        <div class="d-flex align-items-center justify-content-center my-4">
-                            <img src="../../isep-ginasio/frontend/assets/img/gym125.png" alt="Logotipo do ginásio">
-                            <h2><strong>ISEP - Ginásio</strong></h2>
+                        <div class="d-flex align-items-center justify-content-center mb-4 gap-3">
+                            <img src="../frontend/assets/img/Logo.png" alt="Logo MedStock" height="55">
+                            <h2 class="mb-0 logo-titulo">MedStock</h2>
                         </div>
                         <div class="row">
                             <div class="col">
-                                <!-- Formulário -->
+                    <!-- Formulário -->
                             </div>
                         </div>
                     </div>
-                    <form action="../../isep-ginasio/backend/index.html" method="post">
+                    <form action="../../SIBDAS_projeto_final/backend/index.html" method="post">
                         <div class="mb-3">
                             <label for="email" class="form-label">Utilizador</label>
                             <input type="email" name="email" id="email" class="form-control">
@@ -52,9 +52,10 @@
                             </button>
 
                         </div>
-                        <div class="alert alert-danger p-2 text-center">
-                            Erro: Utilizador não registado
-                        </div>
+                    <!-- Mensagem de erro (oculta por padrão) -->
+                    <div class="alert alert-danger p-2 text-center small d-none" id="erroLogin">
+                        <i class="fa-solid fa-triangle-exclamation me-1"></i> Credenciais inválidas. Tente novamente.
+                    </div>
                     </form>
                 </div>
             </div>
