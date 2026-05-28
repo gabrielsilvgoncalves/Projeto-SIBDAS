@@ -30,33 +30,43 @@
                         <div class="d-flex align-items-center justify-content-center mb-4 gap-3">
                             <img src="../frontend/assets/img/Logo.png" alt="Logo MedStock" height="55">
                             <h2 class="mb-0 logo-titulo">MedStock</h2>
-                        </div>
+                        </div>                                        
+                        
+                        <p class="text-center text-muted small mb-4">Introduza as suas credenciais para aceder ao sistema</p>
+
                         <div class="row">
                             <div class="col">
-                    <!-- Formulário -->
                             </div>
                         </div>
                     </div>
-                    <form action="../../SIBDAS_projeto_final/backend/index.html" method="post">
-                        <div class="mb-3">
-                            <label for="email" class="form-label">Utilizador</label>
-                            <input type="email" name="email" id="email" class="form-control">
-                        </div>
-                        <div class="mb-3">
-                            <label for="password" class="form-label">Password</label>
-                            <input type="password" name="password" id="password" class="form-control">
-                        </div>
-                        <div class="mb-3 text-center">
-                            <button type="submit" class="btn btn-secondary px-4">
-                                Entrar <i class="fa-solid fa-right-to-bracket ms-2"></i>
-                            </button>
+                    <!-- Formulário -->
+                <form action="../backend/index.html" method="get" id="formLogin" novalidate>
+                    <div class="mb-3">
+                        <label for="utilizador" class="form-label fw-semibold">
+                            <i class="fa-regular fa-user me-1"></i> Utilizador
+                        </label>
+                        <input type="text" class="form-control" id="utilizador" name="utilizador"
+                            placeholder="utilizador@hospital.pt" required>
+                    </div>
+                    <div class="mb-4">
+                        <label for="password" class="form-label fw-semibold">
+                            <i class="fa-solid fa-lock me-1"></i> Password
+                        </label>
+                        <input type="password" class="form-control" id="password" name="password"
+                            placeholder="********" required>
+                    </div>
 
-                        </div>
+                    <div class="d-grid mb-3">
+                        <button type="submit" class="btn btn-login">
+                            Entrar <i class="fa-solid fa-right-to-bracket ms-2"></i>
+                        </button>
+                    </div>
+
                     <!-- Mensagem de erro (oculta por padrão) -->
                     <div class="alert alert-danger p-2 text-center small d-none" id="erroLogin">
                         <i class="fa-solid fa-triangle-exclamation me-1"></i> Credenciais inválidas. Tente novamente.
                     </div>
-                    </form>
+                </form>
                 </div>
             </div>
         </div>
