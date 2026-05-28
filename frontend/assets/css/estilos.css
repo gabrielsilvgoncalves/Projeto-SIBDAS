@@ -377,3 +377,21 @@ section {
     padding: 16px;
 }
 
+/* =========================================
+   Responsivo
+   ========================================= */
+@media screen and (max-width: 900px) {
+    .bng-navbar .nav-links {
+        display: none;
+    }
+
+    .hero-content h1 {
+        font-size: 2.2em;
+    }
+
+    #sobre-nos {
+        grid-template-columns: 1fr;
+    }
+}
+
+
