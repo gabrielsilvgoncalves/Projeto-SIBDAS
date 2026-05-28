@@ -380,6 +380,25 @@ section {
 /* =========================================
    Responsivo
    ========================================= */
+/* Botão de login */
+.btn-login {
+    background-color: var(--verde);
+    color: #ffffff;
+    border: none;
+    border-radius: 50px;
+    font-size: 0.95em;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+    padding: 12px 0;
+    transition: background-color 0.3s;
+}
+
+.btn-login:hover {
+    background-color: var(--verde-escuro);
+    color: #ffffff;
+}
+
 @media screen and (max-width: 900px) {
     .bng-navbar .nav-links {
         display: none;
