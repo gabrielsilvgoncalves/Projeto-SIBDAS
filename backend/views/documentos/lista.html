@@ -54,6 +54,35 @@
                 </a>
             </div>
             <hr>
+        <!-- FILTROS -->
+                <div class="card border-0 shadow-sm mb-3">
+                    <div class="card-body py-3">
+                        <form class="row g-2 align-items-end">
+                            <div class="col-md-4">
+                                <label class="form-label small fw-semibold mb-1">Pesquisar equipamento</label>
+                                <input type="text" class="form-control form-control-sm" id="pesquisa" placeholder="Código, designação...">
+                            </div>
+                            <div class="col-md-3">
+                                <label class="form-label small fw-semibold mb-1">Tipo de Documento</label>
+                                <select class="form-select form-select-sm" id="filtroTipo">
+                                    <option value="">Todos</option>
+                                    <option>Manual de utilizador</option>
+                                    <option>Manual de serviço</option>
+                                    <option>Certificado de calibração</option>
+                                    <option>Contrato de manutenção</option>
+                                    <option>Fatura / Guia de aquisição</option>
+                                    <option>Declaração de conformidade</option>
+                                    <option>Relatório técnico</option>
+                                </select>
+                            </div>
+                            <div class="col-md-2">
+                                <button type="button" class="btn btn-sm text-white" style="background-color: #00b8d9;" onclick="pesquisar()">
+                                    <i class="fas fa-search me-1"></i> Filtrar
+                                </button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
 
 
     <script src="../../assets/bootstrap/bootstrap.bundle.min.js"></script>
