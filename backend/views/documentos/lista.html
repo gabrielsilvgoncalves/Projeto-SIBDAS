@@ -163,8 +163,17 @@
             </main>
         </div>
     </div>
-
-
     <script src="../../assets/bootstrap/bootstrap.bundle.min.js"></script>
+    <script>
+        function pesquisar() {
+            const texto = document.getElementById('pesquisa').value.toLowerCase();
+            const tipo = document.getElementById('filtroTipo').value.toLowerCase();
+            document.querySelectorAll('#tabelaCorpo tr').forEach(function (linha) {
+                const txt = linha.textContent.toLowerCase();
+                linha.style.display = (!texto || txt.includes(texto)) && (!tipo || txt.includes(tipo)) ? '' : 'none';
+            });
+        }
+        document.getElementById('pesquisa').addEventListener('keyup', pesquisar);
+    </script>
 </body>
 </html>
