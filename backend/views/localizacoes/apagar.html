@@ -67,4 +67,17 @@
                     </div>
                 </div>
             </main>
+        </div>
+        <script src="../../assets/bootstrap/bootstrap.bundle.min.js"></script>
+    <script>
+        function confirmar(e) {
+            e.preventDefault();
+            if (confirm('Confirma a remoção desta localização?')) {
+                alert('Localização removida com sucesso.');
+                window.location.href = 'lista.html';
+            }
+        }
+    </script>
+</body>
+</html>
 
