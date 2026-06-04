@@ -89,4 +89,20 @@
             </main>
         </div>
     </div>
+    <script src="../../assets/bootstrap/bootstrap.bundle.min.js"></script>
+    <script>
+        document.getElementById('formEditar').addEventListener('submit', function (e) {
+            e.preventDefault();
+            const servico = document.getElementById('servico');
+            if (!servico.value.trim()) {
+                servico.classList.add('is-invalid');
+                document.getElementById('erroForm').classList.remove('d-none');
+            } else {
+                alert('Localização atualizada com sucesso!');
+                window.location.href = 'lista.html';
+            }
+        });
+    </script>
+</body>
+</html>
         
