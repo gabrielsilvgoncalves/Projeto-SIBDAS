@@ -1,0 +1,99 @@
+﻿<!DOCTYPE html>
+<html lang="pt-PT">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>MedStock — Remover Equipamento</title>
+    <link rel="shortcut icon" href="../../assets/img/Logo.png" type="image/png">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="../../assets/bootstrap/bootstrap.min.css">
+    <link rel="stylesheet" href="../../assets/fontawesome/all.min.css">
+    <link rel="stylesheet" href="../../assets/css/1231236.css">
+</head>
+<body>
+    <header class="container-fluid text-white" style="background-color: #004f63;">
+        <div class="row align-items-center">
+            <div class="col-6 d-flex align-items-center p-3">
+                <a href="../../index.html"><img src="../../assets/img/Logo.png" alt="Logo" height="50" class="me-3"></a>
+                <h3 class="mb-0 fw-bold">MedStock</h3>
+            </div>
+            <div class="col-6 text-end p-3">
+                <div class="dropdown">
+                    <button class="btn btn-outline-light dropdown-toggle" type="button" data-bs-toggle="dropdown">
+                        <i class="fa-regular fa-user me-2"></i> Utilizador
+                    </button>
+                    <ul class="dropdown-menu dropdown-menu-end">
+                        <li><a class="dropdown-item" href="#"><i class="fa-solid fa-key me-2"></i>Alterar password</a></li>
+                        <li><hr class="dropdown-divider"></li>
+                        <li><a class="dropdown-item" href="../../../login/login.html"><i class="fa-solid fa-right-from-bracket me-2"></i>Sair</a></li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <div class="container-fluid">
+        <div class="row">
+            <aside class="col-md-3 col-lg-2 min-vh-100 p-3 text-white" style="background-color: #212529;">
+                <h5 class="fw-bold mt-2 mb-3" style="color: #00b8d9;">Menu</h5>
+                <nav>
+                    <a href="../../index.html" class="nav-link text-white px-2 mb-1 d-block rounded"><i class="fas fa-tachometer-alt me-2"></i> Dashboard</a>
+                    <a href="lista.html" class="nav-link text-white px-2 mb-1 d-block rounded nav-link-active"><i class="fas fa-stethoscope me-2"></i> Equipamentos</a>
+                    <a href="../fornecedores/lista.html" class="nav-link text-white px-2 mb-1 d-block rounded"><i class="fas fa-truck me-2"></i> Fornecedores</a>
+                    <a href="../localizacoes/lista.html" class="nav-link text-white px-2 mb-1 d-block rounded"><i class="fas fa-map-marker-alt me-2"></i> Localizações</a>
+                    <a href="../documentos/lista.html" class="nav-link text-white px-2 mb-1 d-block rounded"><i class="fas fa-file-medical me-2"></i> Documentos</a>
+                    <a href="../garantias/lista.html" class="nav-link text-white px-2 mb-1 d-block rounded"><i class="fas fa-shield-alt me-2"></i> Garantias</a>
+                    <a href="../backoffice/conteudo.html" class="nav-link text-white px-2 mb-1 d-block rounded"><i class="fas fa-globe me-2"></i> Área Pública</a>
+                </nav>
+            </aside>
+
+            <main class="col-md-9 col-lg-10 p-4 d-flex align-items-start justify-content-center" style="background-color: #f2f2f2;">
+                <div class="caixa-apagar">
+                    <div class="icone-alerta">
+                        <i class="fas fa-triangle-exclamation"></i>
+                    </div>
+                    <h4 class="fw-bold mb-2">Confirmar Remoção</h4>
+                    <p class="text-muted">Tem a certeza que pretende remover o seguinte equipamento?</p>
+                    <p class="text-muted small">Esta ação é irreversível. Todos os dados associados ao equipamento serão eliminados.</p>
+
+                    <div class="info-item">
+                        <strong>Código:</strong> 04.002.00<br>
+                        <strong>Designação:</strong> Monitor multiparamétrico<br>
+                        <strong>Marca / Modelo:</strong> Philips / IntelliVue MP5<br>
+                        <strong>Nº Série:</strong> MP5-2022-45873<br>
+                        <strong>Serviço:</strong> Unidade de Cuidados Intensivos
+                    </div>
+
+                    <div class="alert alert-danger py-2 px-3 mt-3 small text-start">
+                        <i class="fas fa-exclamation-circle me-1"></i>
+                        <strong>Atenção:</strong> Este equipamento tem documentos e registos de garantia associados que também serão removidos.
+                    </div>
+
+                    <div class="botoes mt-4">
+                        <a href="lista.html" class="botao-cancelar">
+                            <i class="fas fa-xmark me-1"></i> Cancelar
+                        </a>
+                        <a href="lista.html" class="botao-confirmar" onclick="confirmarRemocao(event)">
+                            <i class="fas fa-trash-can me-1"></i> Confirmar Remoção
+                        </a>
+                    </div>
+                </div>
+            </main>
+        </div>
+    </div>
+
+    <script src="../../assets/bootstrap/bootstrap.bundle.min.js"></script>
+    <script>
+        function confirmarRemocao(e) {
+            e.preventDefault();
+            if (confirm('Esta ação é irreversível. Confirma a remoção do equipamento?')) {
+                alert('Equipamento removido com sucesso.');
+                window.location.href = 'lista.html';
+            }
+        }
+    </script>
+</body>
+</html>
+</html>

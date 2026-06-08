@@ -1,0 +1,53 @@
+a58c46c - Gabriel Gonçalves - 2026-06-04 15:58:29 +0100 - criar nova localização
+eba9e91 - Gabriel Gonçalves - 2026-06-04 15:52:51 +0100 - listagem das locs dos dispositivos médicos
+19a331a - Gabriel Gonçalves - 2026-06-04 15:50:05 +0100 - fim
+2d1a5a9 - Gabriel Gonçalves - 2026-06-04 15:48:57 +0100 - main
+fbf91e4 - Gabriel Gonçalves - 2026-06-04 15:46:27 +0100 - fim
+b48c822 - Gabriel Gonçalves - 2026-06-04 15:45:17 +0100 - main
+1b8f290 - Gabriel Gonçalves - 2026-06-04 15:44:33 +0100 - cabeçalho e sidebar
+5f8f3e2 - Gabriel Gonçalves - 2026-06-04 15:43:09 +0100 - cabeçalho e sidebar- apagar
+0458cbe - Gabriel Gonçalves - 2026-06-02 16:48:03 +0100 - novo-garantias
+a3980d4 - Gabriel Gonçalves - 2026-06-02 16:47:11 +0100 - lista- garantias
+1c3f9a8 - Gabriel Gonçalves - 2026-06-02 16:41:49 +0100 - novo-fornecedores
+5daa118 - Gabriel Gonçalves - 2026-06-02 16:40:49 +0100 - lista-fornecedores
+b55d2b2 - Gabriel Gonçalves - 2026-06-02 16:39:08 +0100 - editar-fornecedores
+d1e9223 - Gabriel Gonçalves - 2026-06-02 16:38:26 +0100 - detalhes-fornecedores
+23a1dff - Gabriel Gonçalves - 2026-06-02 16:34:34 +0100 - apagar-fornecedores
+c88b4e2 - Gabriel Gonçalves - 2026-06-02 16:08:51 +0100 - novo e lista
+30a5853 - Gabriel Gonçalves - 2026-06-02 16:05:27 +0100 - sidebar
+ac22f8d - Gabriel Gonçalves - 2026-06-02 16:03:20 +0100 - cabeçalho
+d1c8e7a - Gabriel Gonçalves - 2026-06-02 15:54:39 +0100 - editar
+b8d4995 - Gabriel Gonçalves - 2026-06-02 15:53:01 +0100 - detalhes-final
+5ed18c1 - Gabriel Gonçalves - 2026-06-02 15:50:14 +0100 - aquisição e localização
+b0e62fd - Gabriel Gonçalves - 2026-06-02 15:44:26 +0100 - Frabicante e modelo
+1dafa3a - Gabriel Gonçalves - 2026-06-02 15:38:54 +0100 - Identificação
+fe6ccb0 - Gabriel Gonçalves - 2026-06-02 15:38:15 +0100 - cabeçalho do equipamento
+e207bb1 - Gabriel Gonçalves - 2026-06-02 15:31:02 +0100 - apagar- documentos
+6be8e43 - Gabriel Gonçalves - 2026-06-02 15:00:07 +0100 - documentos
+0e2219b - Gabriel Gonçalves - 2026-05-31 19:01:29 +0100 - tabela
+b9ed6e5 - Gabriel Gonçalves - 2026-05-31 18:59:43 +0100 - filtros
+a318319 - Gabriel Gonçalves - 2026-05-31 18:57:26 +0100 - adicionar layout com barra lateral e área de conteúdo principal
+88790b4 - Gabriel Gonçalves - 2026-05-31 18:54:08 +0100 - adicionar cabeçalho com logo e menu de utilizador
+1e1c7bc - Gabriel Gonçalves - 2026-05-31 18:29:01 +0100 - TABELA: EQUIPAMENTOS POR SERVIÇO
+f6f1243 - Gabriel Gonçalves - 2026-05-31 18:23:37 +0100 - KPIs - LINHA 2
+e062007 - Gabriel Gonçalves - 2026-05-31 18:22:03 +0100 - KPIs - LINHA 1
+ed1d910 - Gabriel Gonçalves - 2026-05-31 18:18:54 +0100 - CONTEÚDO PRINCIPAL
+2d64e94 - Gabriel Gonçalves - 2026-05-31 18:17:10 +0100 - Sidebar
+58a9c84 - Gabriel Gonçalves - 2026-05-31 18:15:41 +0100 - cabeçalho
+c68bc7a - Gabriel Gonçalves - 2026-05-28 11:22:32 +0100 - parte inicial do backend
+6364dba - Gabriel Gonçalves - 2026-05-28 11:16:36 +0100 - botao entrar a azul nos estilos css
+dc70378 - Gabriel Gonçalves - 2026-05-28 10:55:34 +0100 - pequenos ajustes no layout do login
+34c4050 - Gabriel Gonçalves - 2026-05-28 10:50:41 +0100 - Eliminar codigo do backend que me tinha enganado e estava a programar o frontend´
+93d11c4 - Gabriel Gonçalves - 2026-05-28 10:43:25 +0100 - usei o codigo disponibilizado no isep ginasio
+fb201b8 - Gabriel Gonçalves - 2026-05-27 10:11:59 +0100 - contacto e rodape
+887ea9b - Gabriel Gonçalves - 2026-05-27 10:11:18 +0100 - Seção Serviços
+a80ce5a - Gabriel Gonçalves - 2026-05-27 10:09:38 +0100 - Seção Sobre Nós
+7df4bd3 - Gabriel Gonçalves - 2026-05-27 00:14:07 +0100 - Reset e Estilos Gerais
+9dbd694 - Gabriel Gonçalves - 2026-05-26 20:12:48 +0100 - Rodape
+b26e1c4 - Gabriel Gonçalves - 2026-05-26 20:08:39 +0100 - criação formulario contacto
+6bd9abf - Gabriel Gonçalves - 2026-05-26 19:39:29 +0100 - botao sobre nos
+2f191db - Gabriel Gonçalves - 2026-05-26 19:36:18 +0100 - Secção Sobre Nós em grelha de 2 colunas
+5dd056c - Gabriel Gonçalves - 2026-05-26 19:18:40 +0100 - passagem do codigo para o frontend, estava a trabalhar no backend
+cd8094c - Gabriel Gonçalves - 2026-05-26 19:15:55 +0100 - Secção sobre nós
+b543338 - Gabriel Gonçalves - 2026-05-23 18:43:59 +0100 - Secção Hero com imagem de fundo e overlay
+6657e1d - Gabriel Gonçalves - 2026-05-23 18:35:42 +0100 - Barra de navegação fixa (navbar)-Frontend

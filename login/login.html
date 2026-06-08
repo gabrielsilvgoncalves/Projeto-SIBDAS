@@ -7,15 +7,14 @@
     <title>MedStock - Login</title>
 
     <!-- Bootstrap CSS & custom CSS -->
-    <link rel="stylesheet" href="../frontend/assets/bootstrap/bootstrap.min.css">
-    <link rel="stylesheet" href="../frontend/assets/css/estilos.css">
+    <link rel="stylesheet" href="../public/assets/bootstrap/bootstrap.min.css">
+    <link rel="stylesheet" href="../public/assets/css/1231236.css">
 
     <!-- Favicon -->
-    <link rel="shortcut icon" href="../frontend/assets/img/Logo.png" type="image/png">
+    <link rel="shortcut icon" href="../public/assets/img/Logo.png" type="image/png">
 
     <!-- Font Awesome -->
-    <!-- Nota: Verifica se este caminho está mesmo correto para o teu projeto -->
-    <link rel="stylesheet" href="../../SIBDAS_projeto_final/backend/assets/fontawesome/all.min.css">
+    <link rel="stylesheet" href="../private/assets/fontawesome/all.min.css">
 
     <!-- Google Fonts -->
     <link href="https://fonts.googleapis.com/css2?family=Titillium+Web:wght@300;700&display=swap" rel="stylesheet">
@@ -36,13 +35,13 @@
 
                 <!-- Imagem do Medstock + texto -->
                 <div class="d-flex align-items-center justify-content-center mb-4 gap-3">
-                    <img src="../frontend/assets/img/Logo.png" alt="Logo MedStock" height="55">
+                    <img src="../public/assets/img/Logo.png" alt="Logo MedStock" height="55">
                     <h2 class="mb-0 logo-titulo">MedStock</h2>
                 </div>
 
                 <p class="text-center text-muted small mb-4">Introduza as suas credenciais para aceder ao sistema.</p>
                 <!-- Formulário -->
-                <form action="../backend/index.html" method="get" id="formLogin" novalidate>
+                <form action="../private/index.html" method="get" id="formLogin" novalidate>
                     <div class="mb-3">
                         <label for="utilizador" class="form-label fw-semibold">
                             <i class="fa-regular fa-user me-1"></i> Utilizador
@@ -73,7 +72,7 @@
             </div>
         </div>
         </div>
-        <script src="../backend/assets/bootstrap/bootstrap.bundle.min.js"></script>
+        <script src="../private/assets/bootstrap/bootstrap.bundle.min.js"></script>
         <script>
             document.getElementById('formLogin').addEventListener('submit', function (e) {
                 const user = document.getElementById('utilizador').value.trim();

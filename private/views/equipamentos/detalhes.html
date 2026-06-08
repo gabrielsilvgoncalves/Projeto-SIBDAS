@@ -1,0 +1,224 @@
+﻿<!DOCTYPE html>
+<html lang="pt-PT">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>MedStock — Ficha do Equipamento</title>
+    <link rel="shortcut icon" href="../../assets/img/Logo.png" type="image/png">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="../../assets/bootstrap/bootstrap.min.css">
+    <link rel="stylesheet" href="../../assets/fontawesome/all.min.css">
+    <link rel="stylesheet" href="../../assets/css/1231236.css">
+</head>
+<body>
+    <header class="container-fluid text-white" style="background-color: #004f63;">
+        <div class="row align-items-center">
+            <div class="col-6 d-flex align-items-center p-3">
+                <a href="../../index.html"><img src="../../assets/img/Logo.png" alt="Logo" height="50" class="me-3"></a>
+                <h3 class="mb-0 fw-bold">MedStock</h3>
+            </div>
+            <div class="col-6 text-end p-3">
+                <div class="dropdown">
+                    <button class="btn btn-outline-light dropdown-toggle" type="button" data-bs-toggle="dropdown">
+                        <i class="fa-regular fa-user me-2"></i> Utilizador
+                    </button>
+                    <ul class="dropdown-menu dropdown-menu-end">
+                        <li><a class="dropdown-item" href="#"><i class="fa-solid fa-key me-2"></i>Alterar password</a></li>
+                        <li><hr class="dropdown-divider"></li>
+                        <li><a class="dropdown-item" href="../../../login/login.html"><i class="fa-solid fa-right-from-bracket me-2"></i>Sair</a></li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </header>
+        <div class="container-fluid">
+        <div class="row">
+            <aside class="col-md-3 col-lg-2 min-vh-100 p-3 text-white" style="background-color: #212529;">
+                <h5 class="fw-bold mt-2 mb-3" style="color: #00b8d9;">Menu</h5>
+                <nav>
+                    <a href="../../index.html" class="nav-link text-white px-2 mb-1 d-block rounded"><i class="fas fa-tachometer-alt me-2"></i> Dashboard</a>
+                    <a href="lista.html" class="nav-link text-white px-2 mb-1 d-block rounded nav-link-active"><i class="fas fa-stethoscope me-2"></i> Equipamentos</a>
+                    <a href="../fornecedores/lista.html" class="nav-link text-white px-2 mb-1 d-block rounded"><i class="fas fa-truck me-2"></i> Fornecedores</a>
+                    <a href="../localizacoes/lista.html" class="nav-link text-white px-2 mb-1 d-block rounded"><i class="fas fa-map-marker-alt me-2"></i> Localizações</a>
+                    <a href="../documentos/lista.html" class="nav-link text-white px-2 mb-1 d-block rounded"><i class="fas fa-file-medical me-2"></i> Documentos</a>
+                    <a href="../garantias/lista.html" class="nav-link text-white px-2 mb-1 d-block rounded"><i class="fas fa-shield-alt me-2"></i> Garantias</a>
+                    <a href="../backoffice/conteudo.html" class="nav-link text-white px-2 mb-1 d-block rounded"><i class="fas fa-globe me-2"></i> Área Pública</a>
+                </nav>
+            </aside>
+
+            <main class="col-md-9 col-lg-10 p-4" style="background-color: #f2f2f2;">
+                <div class="d-flex justify-content-between align-items-center mb-3">
+                    <h2 class="mb-0 fw-bold" style="color: #004f63;">
+                        <i class="fas fa-stethoscope me-2"></i> Ficha do Equipamento
+                    </h2>
+                    <div class="d-flex gap-2">
+                        <a href="editar.html" class="btn btn-warning btn-sm fw-semibold">
+                            <i class="fas fa-pen-to-square me-1"></i> Editar
+                        </a>
+                        <a href="lista.html" class="btn btn-outline-secondary btn-sm">
+                            <i class="fas fa-arrow-left me-1"></i> Voltar
+                        </a>
+                    </div>
+                </div>
+                <hr>
+                
+                <!-- CABEÇALHO DO EQUIPAMENTO -->
+                <div class="card border-0 shadow-sm mb-3">
+                    <div class="card-body d-flex justify-content-between align-items-center py-3">
+                        <div>
+                            <h4 class="fw-bold mb-1" style="color: #004f63;">Monitor multiparamétrico</h4>
+                            <p class="text-muted mb-0">Philips — IntelliVue MP5 &nbsp;|&nbsp; <code>04.002.00</code></p>
+                        </div>
+                        <div class="d-flex gap-2">
+                            <span class="estado-badge badge-ativo">Ativo</span>
+                            <span class="critico-badge badge-critico-alta">Alta criticidade</span>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="row g-3">
+                    <!-- IDENTIFICAÇÃO -->
+                    <div class="col-md-6">
+                        <div class="card border-0 shadow-sm h-100">
+                            <div class="card-header fw-bold" style="background-color: #004f63; color: white;">
+                                <i class="fas fa-tag me-2"></i> Identificação
+                            </div>
+                            <div class="card-body">
+                                <table class="table table-sm table-borderless mb-0">
+                                    <tr><td class="text-muted fw-semibold" style="width:45%">Código Interno</td><td><code>04.002.00</code></td></tr>
+                                    <tr><td class="text-muted fw-semibold">Designação</td><td>Monitor multiparamétrico</td></tr>
+                                    <tr><td class="text-muted fw-semibold">Categoria</td><td>Monitorização</td></tr>
+                                    <tr><td class="text-muted fw-semibold">Estado</td><td><span class="estado-badge badge-ativo">Ativo</span></td></tr>
+                                    <tr><td class="text-muted fw-semibold">Criticidade</td><td><span class="critico-badge badge-critico-alta">Alta</span></td></tr>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- FABRICANTE E MODELO -->
+                    <div class="col-md-6">
+                        <div class="card border-0 shadow-sm h-100">
+                            <div class="card-header fw-bold" style="background-color: #004f63; color: white;">
+                                <i class="fas fa-industry me-2"></i> Fabricante e Modelo
+                            </div>
+                            <div class="card-body">
+                                <table class="table table-sm table-borderless mb-0">
+                                    <tr><td class="text-muted fw-semibold" style="width:45%">Marca</td><td>Philips</td></tr>
+                                    <tr><td class="text-muted fw-semibold">Modelo</td><td>IntelliVue MP5</td></tr>
+                                    <tr><td class="text-muted fw-semibold">Fabricante</td><td>Philips Healthcare</td></tr>
+                                    <tr><td class="text-muted fw-semibold">Nº Série</td><td>MP5-2022-45873</td></tr>
+                                    <tr><td class="text-muted fw-semibold">Ano de Fabrico</td><td>2022</td></tr>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- AQUISIÇÃO -->
+                    <div class="col-md-6">
+                        <div class="card border-0 shadow-sm h-100">
+                            <div class="card-header fw-bold" style="background-color: #004f63; color: white;">
+                                <i class="fas fa-receipt me-2"></i> Aquisição
+                            </div>
+                            <div class="card-body">
+                                <table class="table table-sm table-borderless mb-0">
+                                    <tr><td class="text-muted fw-semibold" style="width:45%">Data de Aquisição</td><td>15/03/2022</td></tr>
+                                    <tr><td class="text-muted fw-semibold">Tipo de Entrada</td><td>Compra</td></tr>
+                                    <tr><td class="text-muted fw-semibold">Custo de Aquisição</td><td>€ 22 500,00</td></tr>
+                                    <tr><td class="text-muted fw-semibold">Fornecedor</td><td><a href="../fornecedores/detalhes.html">Philips Healthcare Portugal</a></td></tr>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- LOCALIZAÇÃO -->
+                    <div class="col-md-6">
+                        <div class="card border-0 shadow-sm h-100">
+                            <div class="card-header fw-bold" style="background-color: #004f63; color: white;">
+                                <i class="fas fa-map-marker-alt me-2"></i> Localização
+                            </div>
+                            <div class="card-body">
+                                <table class="table table-sm table-borderless mb-0">
+                                    <tr><td class="text-muted fw-semibold" style="width:45%">Edifício</td><td>Edifício Principal</td></tr>
+                                    <tr><td class="text-muted fw-semibold">Piso</td><td>Piso 3</td></tr>
+                                    <tr><td class="text-muted fw-semibold">Serviço</td><td>Unidade de Cuidados Intensivos</td></tr>
+                                    <tr><td class="text-muted fw-semibold">Sala</td><td>Sala UCI-03</td></tr>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+
+                     <!-- GARANTIA -->
+                    <div class="col-md-6">
+                        <div class="card border-0 shadow-sm h-100">
+                            <div class="card-header fw-bold" style="background-color: #004f63; color: white;">
+                                <i class="fas fa-shield-alt me-2"></i> Garantia e Contrato
+                            </div>
+                            <div class="card-body">
+                                <table class="table table-sm table-borderless mb-0">
+                                    <tr><td class="text-muted fw-semibold" style="width:45%">Início da Garantia</td><td>15/03/2022</td></tr>
+                                    <tr><td class="text-muted fw-semibold">Fim da Garantia</td><td><span class="text-warning fw-semibold">28/05/2025</span></td></tr>
+                                    <tr><td class="text-muted fw-semibold">Contrato Manutenção</td><td>Sim — Anual</td></tr>
+                                    <tr><td class="text-muted fw-semibold">Entidade Responsável</td><td>Philips Healthcare Portugal</td></tr>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- DOCUMENTAÇÃO -->
+                    <div class="col-md-6">
+                        <div class="card border-0 shadow-sm h-100">
+                            <div class="card-header fw-bold" style="background-color: #004f63; color: white;">
+                                <i class="fas fa-file-medical me-2"></i> Documentação
+                            </div>
+                            <div class="card-body">
+                                <ul class="list-unstyled mb-0">
+                                    <li class="mb-2"><i class="fas fa-check-circle text-success me-2"></i> Manual de utilizador</li>
+                                    <li class="mb-2"><i class="fas fa-check-circle text-success me-2"></i> Manual de serviço</li>
+                                    <li class="mb-2"><i class="fas fa-check-circle text-success me-2"></i> Fatura de aquisição</li>
+                                    <li class="mb-2"><i class="fas fa-times-circle text-danger me-2"></i> Certificado de calibração <small class="text-muted">(em falta)</small></li>
+                                    <li class="mb-2"><i class="fas fa-check-circle text-success me-2"></i> Contrato de manutenção</li>
+                                </ul>
+                                <a href="../documentos/novo.html" class="btn btn-sm btn-outline-secondary mt-2">
+                                    <i class="fas fa-plus me-1"></i> Adicionar documento
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- OBSERVAÇÕES -->
+                    <div class="col-12">
+                        <div class="card border-0 shadow-sm">
+                            <div class="card-header fw-bold" style="background-color: #004f63; color: white;">
+                                <i class="fas fa-note-sticky me-2"></i> Observações
+                            </div>
+                            <div class="card-body">
+                                <p class="mb-0 text-muted">Equipamento em boas condições de funcionamento. Última manutenção preventiva realizada em Janeiro 2025. Necessita de certificado de calibração até Junho 2025.</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="d-flex gap-2 mt-4">
+                    <a href="editar.html" class="btn btn-warning fw-semibold">
+                        <i class="fas fa-pen-to-square me-1"></i> Editar Equipamento
+                    </a>
+                    <a href="apagar.html" class="btn btn-outline-danger fw-semibold">
+                        <i class="fas fa-trash-can me-1"></i> Remover
+                    </a>
+                    <a href="lista.html" class="btn btn-outline-secondary">
+                        <i class="fas fa-arrow-left me-1"></i> Voltar à lista
+                    </a>
+                </div>
+            </main>
+        </div>
+    </div>
+
+    <script src="../../assets/bootstrap/bootstrap.bundle.min.js"></script>
+</body>
+</html>
+
+
+
+                
