@@ -7,7 +7,7 @@
 
                 <div class="d-flex align-items-center justify-content-center mb-4 gap-3">
                     <img src="/SIBDAS_projeto_final/public/assets/img/Logo.png" alt="Logo MedStock" height="55">
-                    <h2 class="mb-0 logo-titulo">MedStock</h2>
+                    <h2 class="mb-0 logo-titulo"><?php echo APP_NAME; ?></h2>
                 </div>
 
                 <p class="text-center text-muted small mb-4">Introduza as suas credenciais para aceder ao sistema.</p>
