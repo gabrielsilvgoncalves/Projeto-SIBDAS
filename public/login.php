@@ -1,30 +1,5 @@
-<!DOCTYPE html>
-<html lang="pt">
+<?php include '../private/includes/header.php'; ?>
 
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>MedStock - Login</title>
-
-    <!-- Bootstrap CSS & custom CSS -->
-    <link rel="stylesheet" href="/SIBDAS_projeto_final/public/assets/bootstrap/bootstrap.min.css">
-    <link rel="stylesheet" href="/SIBDAS_projeto_final/public/assets/css/1231236.css">
-
-    <!-- Favicon -->
-    <link rel="shortcut icon" href="/SIBDAS_projeto_final/public/assets/img/Logo.png" type="image/png">
-
-    <!-- Font Awesome -->
-    <link rel="stylesheet" href="/SIBDAS_projeto_final/private/assets/fontawesome/all.min.css">
-
-    <!-- Google Fonts -->
-    <link href="https://fonts.googleapis.com/css2?family=Titillium+Web:wght@300;700&display=swap" rel="stylesheet">
-
-    <style>
-    .link-voltar { color: #00b8d9; text-decoration: none; font-size: 0.88em; }
-    </style>
-</head>
-
-<body>
     <main class="container-fluid min-vh-100 d-flex align-items-center justify-content-center bg-light">
         <div class="col-lg-4 col-md-6 col-sm-8 col-11">
 
@@ -67,7 +42,6 @@
         </div>
     </main>
 
-    <script src="/SIBDAS_projeto_final/private/assets/bootstrap/bootstrap.bundle.min.js"></script>
     <script>
         document.getElementById('formLogin').addEventListener('submit', function (e) {
             const user = document.getElementById('utilizador').value.trim();
@@ -78,6 +52,5 @@
             }
         });
     </script>
-</body>
 
-</html>
+<?php include '../private/includes/footer.php'; ?>
