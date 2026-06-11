@@ -1,0 +1,11 @@
+Teste com DevTools (F12) no Google Chrome
+1. Enviar dados normalmente
+ Acede a http://localhost/isep-ginasio/public/login.php
+ Preenche o formulário e clica em "Entrar".
+ Verifica que os dados aparecem corretamente no index.php.
+2 Manipular os dados com F12
+ Na página do formulário, carregar em F12 (DevTools).
+ Ir ao separador Elements.
+ Localizar o campo do utilizador:
+ Alterar o atributo name="text_username" para algo diferente, como name="utilizador_inventado".
+<input type="email" class="form-control" name="text_username" id=""> 

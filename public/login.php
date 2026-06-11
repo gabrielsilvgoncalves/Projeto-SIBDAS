@@ -12,19 +12,19 @@
 
                 <p class="text-center text-muted small mb-4">Introduza as suas credenciais para aceder ao sistema.</p>
 
-                <form action="/SIBDAS_projeto_final/private/index.php" method="get" id="formLogin" novalidate>
+                <form action="/SIBDAS_projeto_final/private/index.php" method="post" id="formLogin" novalidate>
                     <div class="mb-3">
                         <label for="utilizador" class="form-label fw-semibold">
                             <i class="fa-regular fa-user me-1"></i> Utilizador
                         </label>
-                        <input type="text" class="form-control" id="utilizador" name="utilizador"
+                        <input type="text" class="form-control" id="utilizador" name="text_username"
                             placeholder="utilizador@hospital.pt" required>
                     </div>
                     <div class="mb-4">
                         <label for="password" class="form-label fw-semibold">
                             <i class="fa-solid fa-lock me-1"></i> Password
                         </label>
-                        <input type="password" class="form-control" id="password" name="password" placeholder="********"
+                        <input type="password" class="form-control" id="password" name="text_password" placeholder="********"
                             required>
                     </div>
 
