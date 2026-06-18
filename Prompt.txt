@@ -1,11 +1,37 @@
-Teste com DevTools (F12) no Google Chrome
-1. Enviar dados normalmente
- Acede a http://localhost/isep-ginasio/public/login.php
- Preenche o formulário e clica em "Entrar".
- Verifica que os dados aparecem corretamente no index.php.
-2 Manipular os dados com F12
- Na página do formulário, carregar em F12 (DevTools).
- Ir ao separador Elements.
- Localizar o campo do utilizador:
- Alterar o atributo name="text_username" para algo diferente, como name="utilizador_inventado".
-<input type="email" class="form-control" name="text_username" id=""> 
+1. Criar o ficheiro logout.php. Cria um novo ficheiro em: /isep-ginasio/public/logout.php
+2. Adicionar o seguinte conteúdo: 
+<?php
+// Inicia a sessão para aceder e manipular os dados da $_SESSION
+session_start();
+// --------------------------------------------------------------------
+// TERMINAR A SESSÃO
+// --------------------------------------------------------------------
+// Remove todas as variáveis da sessão
+// Isto limpa os dados armazenados, como $_SESSION['utilizador'], etc.
+session_unset();
+// Destroi completamente a sessão no servidor
+// Isto elimina o identificador da sessão e os dados associados
+session_destroy();
+// --------------------------------------------------------------------
+// REDIRECIONAMENTO PARA O LOGIN
+// --------------------------------------------------------------------
+// Após terminar a sessão, redireciona o utilizador para a página de login
+header('Location: login.php');
+// Encerra a execução do script
+return;
+
+session_start();
+Inicia a sessão atual para poder modificá-la
+session_unset();
+Remove todas as variáveis de sessão.
+ session_destroy();
+Termina a sessão completamente no servidor.
+ header('Location: ...');
+Redireciona o utilizador para a página de login. 
+
+3. Atualizar o link "Sair" no nav.php
+Localiza o item do menu dropdown: 
+
+<li><a class="dropdown-item" href="/isep-ginasio/public/logout.php"><i
+
+e diz me um nome para eu fazer o commit

@@ -1,9 +1,6 @@
 <?php
-// ---------------------------------------------------------------------------
-// SEGURANÇA: Impede que o utilizador aceda diretamente a este script.
-// Este ficheiro deve ser acedido apenas através de submissão de formulário (POST).
-// Se for acedido diretamente (por URL) recebe a informação de Acesso Inválido
-// ----------------------------------------------------------------------------
+// Inicia a sessão para poder usar a variável $_SESSION
+session_start();
 // --------------------------------------------------------------------
 // SEGURANÇA: Impede que o utilizador aceda diretamente a este script.
 // Este ficheiro deve ser acedido apenas através de submissão de formulário (POST).
@@ -15,8 +12,6 @@ if ($_SERVER['REQUEST_METHOD'] != 'POST') {
     // Encerra a execução do script imediatamente após o redirecionamento
     return;
 }
-// Mostrar os dados recebidos pelo formulário através do método POST
-// O nome dos campos (entre aspas) deve ser igual ao atributo "name" no login.php
 // --------------------------------------------------------------------
 // RECOLHA DE DADOS DO FORMULÁRIO
 // --------------------------------------------------------------------
@@ -26,10 +21,54 @@ $username = isset($_POST['text_username']) ? $_POST['text_username'] : '';
 // O mesmo para o campo da password.
 $password = isset($_POST['text_password']) ? $_POST['text_password'] : '';
 // --------------------------------------------------------------------
-// APRESENTAÇÃO DE DADOS ENVIADOS
+// VALIDAÇÃO DOS DADOS
 // --------------------------------------------------------------------
-echo "Utilizador: " . $username . "<br>";
-echo "Password: " . $password;
+// Inicializa um array vazio para guardar mensagens de erro de validação
+$validation_errors = [];
+// Verifica se o nome de utilizador (username) é um endereço de email válido
+// Se não for, adiciona uma mensagem de erro ao array
+if (!filter_var($username, FILTER_VALIDATE_EMAIL)) {
+    $validation_errors[] = 'O username tem que ser um email válido.';
+}
+// Verifica se o nome de utilizador tem um comprimento entre 5 e 50 caracteres
+if (strlen($username) < 5 || strlen($username) > 50) {
+    $validation_errors[] = 'O username deve ter entre 5 e 50 caracteres.';
+}
+// Verifica se a password tem um comprimento entre 6 e 12 caracteres
+if (strlen($password) < 6 || strlen($password) > 12) {
+    $validation_errors[] = 'A password deve ter entre 6 e 12 caracteres.';
+}
+// Se existirem erros de validação, guarda-os na sessão e redireciona para o login
+if (!empty($validation_errors)) {
+    $_SESSION['validation_errors'] = $validation_errors;
+    header('Location: ../public/login.php');
+    exit;
+}
+// --------------------------------------------------------------------
+// SIMULAÇÃO DE RESULTADO DE LOGIN (antes da ligação real à base de dados)
+// --------------------------------------------------------------------
+// Simula o resultado que viria de uma verificação à base de dados
+// Neste caso, assume-se que o login é válido (status = 1)
+// Mais tarde, esta variável será substituída por um resultado real vindo da BD
+$result['status'] = 1; // 1 = login válido, 0 = inválido
+
+// Verifica se o status retornado indica login inválido
+if (!$result['status']) {
+    // Se o login for inválido, guarda uma mensagem de erro na sessão
+    $_SESSION['server_error'] = 'Login inválido';
+
+    // Redireciona o utilizador novamente para o formulário de login
+    header('Location: ../public/login.php');
+
+    // Encerra o script para não continuar o processamento
+    return;
+}
+// -------------------------------------------------------------------
+// LOGIN BEM-SUCEDIDO: Guardar o utilizador na sessão
+// -------------------------------------------------------------------
+// Guarda o nome de utilizador na sessão para identificar o utilizador autenticado
+$_SESSION['utilizador'] = $username;
+// Agora código da área privada
 ?>
 <?php include 'includes/header.php'; ?>
 <?php include 'includes/nav.php'; ?>
@@ -44,6 +83,13 @@ echo "Password: " . $password;
                 <i class="fas fa-tachometer-alt me-2"></i> Dashboard
             </h2>
             <p class="text-muted mb-4">Visão geral do inventário hospitalar</p>
+
+            <!-- ===== APRESENTAÇÃO TEMPORÁRIA DE DADOS (apenas para testes) ===== -->
+            <div class="alert alert-info mb-4">
+                <strong>Dados submetidos (temporário — remover em produção):</strong><br>
+                Username: <?= htmlspecialchars($username) ?><br>
+                Password: <?= htmlspecialchars($password) ?>
+            </div>
 
             <!-- ===== KPIs - LINHA 1 ===== -->
             <div class="row g-3 mb-4">
