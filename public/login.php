@@ -37,7 +37,7 @@ if (!empty($_SESSION['server_error'])) {
 
                 <p class="text-center text-muted small mb-4">Introduza as suas credenciais para aceder ao sistema.</p>
 
-                <form action="/SIBDAS_projeto_final/private/index.php" method="post" id="formLogin" novalidate>
+                <form action="../private/processa_login.php" method="post" id="formLogin" novalidate>
                     <div class="mb-3">
                         <label for="utilizador" class="form-label fw-semibold">
                             <i class="fa-regular fa-user me-1"></i> Utilizador

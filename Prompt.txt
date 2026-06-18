@@ -1,37 +1,46 @@
-1. Criar o ficheiro logout.php. Cria um novo ficheiro em: /isep-ginasio/public/logout.php
-2. Adicionar o seguinte conteúdo: 
+2. Criar o ficheiro home.php (página inicial privada). Este ficheiro só será acessível por utilizadores
+autenticados.
 <?php
-// Inicia a sessão para aceder e manipular os dados da $_SESSION
-session_start();
-// --------------------------------------------------------------------
-// TERMINAR A SESSÃO
-// --------------------------------------------------------------------
-// Remove todas as variáveis da sessão
-// Isto limpa os dados armazenados, como $_SESSION['utilizador'], etc.
-session_unset();
-// Destroi completamente a sessão no servidor
-// Isto elimina o identificador da sessão e os dados associados
-session_destroy();
-// --------------------------------------------------------------------
-// REDIRECIONAMENTO PARA O LOGIN
-// --------------------------------------------------------------------
-// Após terminar a sessão, redireciona o utilizador para a página de login
-header('Location: login.php');
-// Encerra a execução do script
-return;
+require_once 'includes/funcoes.php';
+redirect_if_not_logged();
+start_session();
+$success_message = $_SESSION['success_message'] ?? '';
+unset($_SESSION['success_message']);
+?>
+<?php
+include 'includes/header.php';
+include 'includes/nav.php';
+?>
+<?php if (!empty($success_message)) : ?>
+<div class="position-fixed top-0 end-0 p-3" style="z-index: 11">
+ <div id="toastSuccess" class="toast align-items-center text-bg-success border-0 show" role="alert">
+ <div class="d-flex">
+ <div class="toast-body">
+ <?= htmlspecialchars($success_message) ?>
+ </div>
+ <button type="button" class="btn-close btn-close-white me-2 m-auto" data-bs-dismiss="toast"></button>
+ </div>
+ </div>
+</div>
+<?php endif; ?>
+<div class="container-fluid">
+ <div class="row">
+ <?php include 'includes/sidebar.php'; ?>
+ <!-- Conteúdo Principal -->
+ <main class="col-md-9 col-lg-10 p-4">
+ <section>
+ <h2>ISEP Ginásio</h2>
+ <p>Escolhe uma opção no menu lateral para continuar.</p>
+ </section>
+ </main>
+ </div>
+</div>
+<?php include 'includes/footer.php'; ?>
 
-session_start();
-Inicia a sessão atual para poder modificá-la
-session_unset();
-Remove todas as variáveis de sessão.
- session_destroy();
-Termina a sessão completamente no servidor.
- header('Location: ...');
-Redireciona o utilizador para a página de login. 
 
-3. Atualizar o link "Sair" no nav.php
-Localiza o item do menu dropdown: 
+3. Atualizar public/login.php
+<form action="../private/processa_login.php" method="post"> 
 
-<li><a class="dropdown-item" href="/isep-ginasio/public/logout.php"><i
-
-e diz me um nome para eu fazer o commit
+4. Atulizar private/includes/nav.php 
+<a href="/isep-ginasio/private/index.php">
+para:<a href="/isep-ginasio/private/home.php">

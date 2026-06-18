@@ -6,7 +6,7 @@ if (session_status() == PHP_SESSION_NONE) {
 // Verifica se o utilizador está autenticado
 if (!isset($_SESSION['utilizador'])) {
     // Se não estiver autenticado, redireciona para o formulário de login
-    header('Location: ../public/login.php');
+    header('Location: /SIBDAS_projeto_final/public/login.php');
     exit; // Encerra o script
 }
 // A partir daqui, o utilizador está autenticado
@@ -17,7 +17,7 @@ $nome = $_SESSION['utilizador'];
 <header class="container-fluid text-white" style="background-color: #004f63;">
     <div class="row align-items-center">
         <div class="col-6 d-flex align-items-center p-3">
-            <a href="/SIBDAS_projeto_final/private/index.php">
+            <a href="/SIBDAS_projeto_final/private/home.php">
                 <img src="/SIBDAS_projeto_final/private/assets/img/Logo.png" alt="Logo MedStock" height="50" class="me-3">
             </a>
             <h3 class="mb-0 fw-bold"><?php echo APP_NAME; ?></h3>
