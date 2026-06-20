@@ -8,7 +8,7 @@ start_session();
 // --------------------------------------------------------------------
 if ($_SERVER['REQUEST_METHOD'] != 'POST') {
     // Redireciona para o formulário de login (interface pública)
-    header('Location: /SIBDAS_projeto_final/public/login.php');
+    header('Location: ' . BASE_URL . '/public/login.php');
     // Encerra a execução do script imediatamente após o redirecionamento
     return;
 }
@@ -40,7 +40,7 @@ if (strlen($password) < 6 || strlen($password) > 12) {
 // Se existirem erros de validação, guarda-os na sessão e redireciona para o login
 if (!empty($validation_errors)) {
     $_SESSION['validation_errors'] = $validation_errors;
-    header('Location: /SIBDAS_projeto_final/public/login.php');
+    header('Location: ' . BASE_URL . '/public/login.php');
     exit;
 }
 // --------------------------------------------------------------------
@@ -53,7 +53,7 @@ $result['status'] = 1; // 1 = login válido, 0 = inválido
 // Verifica se o status retornado indica login inválido
 if (!$result['status']) {
     $_SESSION['server_error'] = 'Login inválido';
-    header('Location: /SIBDAS_projeto_final/public/login.php');
+    header('Location: ' . BASE_URL . '/public/login.php');
     return;
 }
 // -------------------------------------------------------------------
@@ -62,5 +62,5 @@ if (!$result['status']) {
 // Guarda o nome de utilizador na sessão para identificar o utilizador autenticado
 $_SESSION['utilizador'] = $username;
 // Redirecionar para a página principal privada
-header('Location: /SIBDAS_projeto_final/private/home.php');
+header('Location: ' . BASE_URL . '/private/home.php');
 exit;

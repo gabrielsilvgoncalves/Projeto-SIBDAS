@@ -1,70 +1,69 @@
-1
-Sessões em views
-Objetivo: Compreender por que razão o mesmo código de sessão pode funcionar em alguns ficheiros (como
-home.php) mas falhar noutros (como views/lista.php), e como resolver esse problema de forma profissional.
-Estrutura do Projeto. O nosso projeto está organizado da seguinte forma:
-/isep-ginasio
-├── config/
-│ └── config.php
-├── public/
-│ └── login.php
-├── private/
-│ ├── includes/
-│ │ └── funcoes.php
-│ ├── views/
-│ │ └── clientes/
-│ │ └── lista.php
-│ └── home.php 
+1. Abrir o ficheiro config/config.php (/isep-ginasio/config/config.php). Este ficheiro já existe e contém outras
+definições globais do projeto (por exemplo: APP_NAME, APP_VERSION, etc.)
+2. Adicionar a variável BASE_URL. Na primeira secção do ficheiro, adicionar a seguinte linha:
+define('BASE_URL', '/isep-ginasio');
+Esta linha deve ser colocada acima de qualquer função ou retorno de valor, idealmente no topo, depois
+da abertura <?php.
+3. Usar BASE_URL nos redirecionamentos No ficheiro private/includes/funcoes.php, garantir que está
+incluído o config.php:
+require_once __DIR__ . '/../../config/config.php';
+E depois, na função redirect_if_not_logged, usar BASE_URL:
+function redirect_if_not_logged($redirect_to = '/public/login.php')
+{
+ start_session();
+ if (!check_session()) {
+ header("Location: " . BASE_URL . $redirect_to);
+ exit;
+ }
+} 
 
-1. O que acontece? No ficheiro home.php, usámos:
-<?
-require_once 'includes/funcoes.php';
-redirect_if_not_logged(); // Redireciona para login se o utilizador não estiver autenticado
-?>
-Nota: Funciona corretamente porque o ficheiro home.php está no mesmo nível que a pasta includes/.
-2. Mas se colocarmos esse mesmo código em lista.php:
-require_once 'includes/funcoes.php’;// ← Vai falhar aqui
-Erro: o caminho includes/funcoes.php já não é válido, porque estamos numa subpasta (views/clientes/), e o ficheiro
-funcoes.php está dois níveis acima. 
-3. Solução correta: usar __DIR__ com caminho relativo fixo. No início do lista.php, devemos usar
-require_once __DIR__ . '/../../includes/funcoes.php';
- __DIR__ é o caminho absoluto da pasta onde o ficheiro atual está.
-o __DIR__ → C:\laragon\www\isep-ginasio\private\views\clientes
- ../../ sobe dois níveis: de clientes/ para views/ e depois para private/.
-o ../../includes/funcoes.php → sobe dois níveis para chegar a private/includes
-3. Colocar o código seguinte em todas as páginas privadas dentro de: /private/views/clientes/
- editar.php
- apagar.php
- detalhes.php
- inserir.php
-Código padrão para páginas protegidas nas views/:
+Bem como na função logout_and_redirect 
+function logout_and_redirect($redirect_to = '/public/login.php')
+{
+ start_session(); // Garante que a sessão foi iniciada
+ session_unset(); // Remove todas as variáveis da sessão
+ session_destroy(); // Destrói completamente a sessão
+ // Redireciona para a página de login com caminho absoluto
+ header("Location: " . BASE_URL . $redirect_to);
+ exit;
+}
+
+Ficheiro final - funções.php 
 <?php
-// --------------------------------------------------------------------
-// SEGURANÇA: Proteção de acesso à página de edição
-// Este ficheiro deve ser acedido apenas por utilizadores autenticados.
-// Caso não exista sessão iniciada, o utilizador será redirecionado para o login.
-// --------------------------------------------------------------------
-require_once __DIR__ . '/../../includes/funcoes.php';
-redirect_if_not_logged(); // Inicia a sessão (se necessário) e verifica se o utilizador está autenticado 
-
-O que garante este bloco?
-1. Inicia a sessão só se ainda não tiver sido iniciada;
-2. Verifica se existe um utilizador autenticado ($_SESSION['utilizador']);
-3. Redireciona automaticamente para o login se a sessão não existir;
-4. Garante segurança consistente em todas as páginas do projeto.
-4. Testar
-1. Fazer logout (o logout.php deverá fazer session_destroy() e redirecionar para login.php).
-2. Aceder diretamente ao endereço protegido:
-http://127.0.0.1/isep-ginasio/private/views/clientes/lista.php
-Comportamento esperado
- Se o início do ficheiro lista.php tiver este bloco: 
-<?php
-require_once __DIR__ . '/../../includes/funcoes.php';
-redirect_if_not_logged(); // Inicia a sessão (se necessário) e verifica se o utilizador está autenticado
-Então será automaticamente redirecionado para:
-http://127.0.0.1/isep-ginasio/public/login.php
-Problema ?
-É redirecionada para http://127.0.0.1/isep-ginasio/private/views/public/login.php 
-Objetivo: Corrigir erros de caminhos relativos (ex: /views/public/login.php) ao fazer redirecionamentos, usando
-uma variável que indica o caminho base do projeto no browser. 
-
+require_once __DIR__ . '/../../config/config.php';
+// Inicia a sessão se ainda não estiver iniciada
+function start_session()
+{
+ if (session_status() == PHP_SESSION_NONE) {
+ session_start();
+ }
+}
+// Verifica se a sessão do utilizador está ativa
+function check_session()
+{
+ return isset($_SESSION['utilizador']);
+}
+// Redireciona automaticamente se não houver sessão iniciada
+function redirect_if_not_logged($redirect_to = '/public/login.php')
+{
+ start_session();
+ if (!check_session()) {
+ header("Location: " . BASE_URL . $redirect_to);
+ exit;
+ }
+}
+function logout_and_redirect($redirect_to = '/public/login.php')
+{
+ start_session(); // Garante que a sessão foi iniciada
+ session_unset(); // Remove todas as variáveis da sessão
+ session_destroy(); // Destrói completamente a sessão
+ // Redireciona para a página de login com caminho absoluto
+ header("Location: " . BASE_URL . $redirect_to);
+ exit;
+} 
+4. Testar todas as páginas e verificar se redireciona para login se não tiver sessão autenticada. Fazer logout e testar
+diretamente
+ http://127.0.0.1/isep-ginasio/private/views/clientes/lista.php
+ http://127.0.0.1/isep-ginasio/private/views/clientes/editar.php
+ http://127.0.0.1/isep-ginasio/private/views/clientes/apagar.php
+ http://127.0.0.1/isep-ginasio/private/views/clientes/detalhes.php

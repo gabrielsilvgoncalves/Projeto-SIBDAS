@@ -1,6 +1,6 @@
 <?php
 require_once 'includes/funcoes.php';
-redirect_if_not_logged('/SIBDAS_projeto_final/public/login.php');
+redirect_if_not_logged();
 start_session();
 $success_message = $_SESSION['success_message'] ?? '';
 unset($_SESSION['success_message']);
