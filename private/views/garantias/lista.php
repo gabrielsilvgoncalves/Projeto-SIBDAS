@@ -162,10 +162,38 @@ $em30dias = date('Y-m-d', strtotime('+30 days'));
 <script>
     $(document).ready(function () {
         $('#tabela-garantias').DataTable({
-            language: { url: 'https://cdn.datatables.net/plug-ins/1.13.6/i18n/pt-PT.json' },
-            pageLength: 10,
-            order: []
+            pageLength: 5,
+            lengthMenu: [[5, 10, 25, 50], [5, 10, 25, 50]],
+            pagingType: "full_numbers",
+            order: [],
+            language: {
+                decimal: "",
+                emptyTable: "Sem dados disponíveis na tabela.",
+                info: "Mostrando _START_ até _END_ de _TOTAL_ registos",
+                infoEmpty: "Mostrando 0 até 0 de 0 registos",
+                infoFiltered: "(Filtrando _MAX_ total de registos)",
+                infoPostFix: "",
+                thousands: ",",
+                lengthMenu: "Mostrando _MENU_ registos por página.",
+                loadingRecords: "A carregar...",
+                processing: "A processar...",
+                search: "Filtrar:",
+                zeroRecords: "Nenhum registo encontrado.",
+                paginate: {
+                    first: "Primeira",
+                    last: "Última",
+                    next: "Seguinte",
+                    previous: "Anterior"
+                },
+                aria: {
+                    sortAscending: ": ative para ordenar a coluna de forma crescente.",
+                    sortDescending: ": ative para ordenar a coluna de forma decrescente."
+                }
+            }
         });
+        $('#tabela-garantias').closest('.card').after(
+            $('#tabela-garantias_paginate').addClass('mt-2 d-flex justify-content-end px-1')
+        );
     });
 </script>
 
