@@ -5,6 +5,29 @@ redirect_if_not_logged();
 <?php include '../../includes/header.php'; ?>
 <?php include '../../includes/nav.php'; ?>
 
+<?php
+try {
+    $ligacao = new PDO(
+        "mysql:host=" . MYSQL_HOST . ";dbname=" . MYSQL_DATABASE . ";charset=utf8",
+        MYSQL_USERNAME,
+        MYSQL_PASSWORD
+    );
+    $ligacao->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
+    $resultados = $ligacao->query("
+        SELECT l.*, COUNT(e.id) AS total_equipamentos
+        FROM localizacoes l
+        LEFT JOIN equipamentos e ON e.id_localizacao = l.id
+        GROUP BY l.id
+        ORDER BY l.nome
+    ")->fetchAll(PDO::FETCH_OBJ);
+    $erro = '';
+} catch (PDOException $err) {
+    $erro = "Aconteceu um erro na ligação.";
+    $resultados = [];
+}
+$ligacao = null;
+?>
+
 <div class="container-fluid">
     <div class="row">
         <?php include '../../includes/sidebar.php'; ?>
@@ -25,46 +48,28 @@ redirect_if_not_logged();
                                 <tr><th>Edifício</th><th>Piso</th><th>Serviço / Departamento</th><th>Sala / Gabinete</th><th class="text-center">Nº Equip.</th><th class="text-center">Ações</th></tr>
                             </thead>
                             <tbody>
+                                <?php if (!empty($erro)): ?>
+                                    <tr><td colspan="6" class="text-center text-danger py-3"><?= htmlspecialchars($erro) ?></td></tr>
+                                <?php elseif (empty($resultados)): ?>
+                                    <tr><td colspan="6" class="text-center text-muted py-3">Nenhuma localização encontrada.</td></tr>
+                                <?php else: foreach ($resultados as $l): ?>
                                 <tr>
-                                    <td>Edifício Principal</td><td>Piso 3</td><td>Unidade de Cuidados Intensivos</td><td>Sala UCI-03</td><td class="text-center">148</td>
+                                    <td><?= htmlspecialchars($l->ala ?? '—') ?></td>
+                                    <td>Piso <?= htmlspecialchars($l->piso) ?></td>
+                                    <td><?= htmlspecialchars($l->nome) ?></td>
+                                    <td><?= htmlspecialchars($l->descricao ?? '—') ?></td>
+                                    <td class="text-center"><?= $l->total_equipamentos ?></td>
                                     <td class="text-center">
-                                        <a href="editar.php" class="btn btn-sm btn-outline-warning me-1"><i class="fas fa-pen-to-square"></i></a>
-                                        <a href="apagar.php" class="btn btn-sm btn-outline-danger"><i class="fas fa-trash-can"></i></a>
+                                        <a href="editar.php?id=<?= $l->id ?>" class="btn btn-sm btn-outline-warning me-1"><i class="fas fa-pen-to-square"></i></a>
+                                        <a href="apagar.php?id=<?= $l->id ?>" class="btn btn-sm btn-outline-danger"><i class="fas fa-trash-can"></i></a>
                                     </td>
                                 </tr>
-                                <tr>
-                                    <td>Edifício Principal</td><td>Piso 2</td><td>Bloco Operatório</td><td>BO-01</td><td class="text-center">212</td>
-                                    <td class="text-center">
-                                        <a href="editar.php" class="btn btn-sm btn-outline-warning me-1"><i class="fas fa-pen-to-square"></i></a>
-                                        <a href="apagar.php" class="btn btn-sm btn-outline-danger"><i class="fas fa-trash-can"></i></a>
-                                    </td>
-                                </tr>
-                                <tr>
-                                    <td>Edifício B</td><td>Piso 0</td><td>Urgência Geral</td><td>Triagem</td><td class="text-center">183</td>
-                                    <td class="text-center">
-                                        <a href="editar.php" class="btn btn-sm btn-outline-warning me-1"><i class="fas fa-pen-to-square"></i></a>
-                                        <a href="apagar.php" class="btn btn-sm btn-outline-danger"><i class="fas fa-trash-can"></i></a>
-                                    </td>
-                                </tr>
-                                <tr>
-                                    <td>Edifício Principal</td><td>Piso 4</td><td>Medicina Interna</td><td>Enfermaria A</td><td class="text-center">96</td>
-                                    <td class="text-center">
-                                        <a href="editar.php" class="btn btn-sm btn-outline-warning me-1"><i class="fas fa-pen-to-square"></i></a>
-                                        <a href="apagar.php" class="btn btn-sm btn-outline-danger"><i class="fas fa-trash-can"></i></a>
-                                    </td>
-                                </tr>
-                                <tr>
-                                    <td>Edifício C</td><td>Piso 1</td><td>Fisioterapia</td><td>Ginásio Reabilitação</td><td class="text-center">61</td>
-                                    <td class="text-center">
-                                        <a href="editar.php" class="btn btn-sm btn-outline-warning me-1"><i class="fas fa-pen-to-square"></i></a>
-                                        <a href="apagar.php" class="btn btn-sm btn-outline-danger"><i class="fas fa-trash-can"></i></a>
-                                    </td>
-                                </tr>
+                                <?php endforeach; endif; ?>
                             </tbody>
                         </table>
                     </div>
                 </div>
-                <div class="card-footer text-muted small">5 localizações registadas</div>
+                <div class="card-footer text-muted small"><?= count($resultados) ?> localização(ões) registada(s)</div>
             </div>
         </main>
     </div>

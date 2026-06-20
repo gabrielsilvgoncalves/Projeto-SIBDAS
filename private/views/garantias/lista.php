@@ -5,6 +5,31 @@ redirect_if_not_logged();
 <?php include '../../includes/header.php'; ?>
 <?php include '../../includes/nav.php'; ?>
 
+<?php
+try {
+    $ligacao = new PDO(
+        "mysql:host=" . MYSQL_HOST . ";dbname=" . MYSQL_DATABASE . ";charset=utf8",
+        MYSQL_USERNAME,
+        MYSQL_PASSWORD
+    );
+    $ligacao->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
+    $resultados = $ligacao->query("
+        SELECT g.*, e.codigo, e.designacao, f.nome AS fornecedor_nome
+        FROM garantias g
+        LEFT JOIN equipamentos e ON g.id_equipamento = e.id
+        LEFT JOIN fornecedores f ON g.id_fornecedor = f.id
+        ORDER BY g.data_fim ASC
+    ")->fetchAll(PDO::FETCH_OBJ);
+    $erro = '';
+} catch (PDOException $err) {
+    $erro = "Aconteceu um erro na ligação.";
+    $resultados = [];
+}
+$ligacao = null;
+$hoje = date('Y-m-d');
+$em30dias = date('Y-m-d', strtotime('+30 days'));
+?>
+
 <div class="container-fluid">
     <div class="row">
         <?php include '../../includes/sidebar.php'; ?>
@@ -77,53 +102,42 @@ redirect_if_not_logged();
                                 </tr>
                             </thead>
                             <tbody id="tabelaCorpo">
+                                <?php if (!empty($erro)): ?>
+                                    <tr><td colspan="8" class="text-center text-danger py-3"><?= htmlspecialchars($erro) ?></td></tr>
+                                <?php elseif (empty($resultados)): ?>
+                                    <tr><td colspan="8" class="text-center text-muted py-3">Nenhuma garantia encontrada.</td></tr>
+                                <?php else: foreach ($resultados as $g):
+                                    if ($g->data_fim < $hoje) {
+                                        $estadoBadge = '<span class="badge bg-danger">Expirada</span>';
+                                        $fimClass = 'text-danger fw-semibold';
+                                    } elseif ($g->data_fim <= $em30dias) {
+                                        $estadoBadge = '<span class="badge bg-warning text-dark">A expirar</span>';
+                                        $fimClass = 'text-warning fw-semibold';
+                                    } else {
+                                        $estadoBadge = '<span class="badge bg-success">Válida</span>';
+                                        $fimClass = '';
+                                    }
+                                ?>
                                 <tr>
-                                    <td><a href="../equipamentos/detalhes.php"><strong>04.002.00</strong> — Monitor Philips MP5</a></td>
-                                    <td>15/03/2022</td>
-                                    <td class="text-warning fw-semibold">28/05/2025</td>
-                                    <td><i class="fas fa-check-circle text-success me-1"></i>Sim — Anual</td>
-                                    <td>Anual</td>
-                                    <td>Philips Healthcare</td>
-                                    <td><span class="badge bg-warning text-dark">A expirar</span></td>
+                                    <td><a href="../equipamentos/detalhes.php?id=<?= $g->id_equipamento ?>"><strong><?= htmlspecialchars($g->codigo) ?></strong> — <?= htmlspecialchars($g->designacao) ?></a></td>
+                                    <td><?= date('d/m/Y', strtotime($g->data_inicio)) ?></td>
+                                    <td class="<?= $fimClass ?>"><?= date('d/m/Y', strtotime($g->data_fim)) ?></td>
+                                    <td><?= htmlspecialchars($g->tipo) ?></td>
+                                    <td><?= htmlspecialchars($g->tipo) ?></td>
+                                    <td><?= htmlspecialchars($g->fornecedor_nome ?? '—') ?></td>
+                                    <td><?= $estadoBadge ?></td>
                                     <td class="text-center">
-                                        <a href="detalhes.php" class="btn btn-sm btn-outline-info me-1"><i class="fas fa-eye"></i></a>
-                                        <a href="editar.php" class="btn btn-sm btn-outline-warning me-1"><i class="fas fa-pen-to-square"></i></a>
-                                        <a href="apagar.php" class="btn btn-sm btn-outline-danger"><i class="fas fa-trash-can"></i></a>
+                                        <a href="detalhes.php?id=<?= $g->id ?>" class="btn btn-sm btn-outline-info me-1"><i class="fas fa-eye"></i></a>
+                                        <a href="editar.php?id=<?= $g->id ?>" class="btn btn-sm btn-outline-warning me-1"><i class="fas fa-pen-to-square"></i></a>
+                                        <a href="apagar.php?id=<?= $g->id ?>" class="btn btn-sm btn-outline-danger"><i class="fas fa-trash-can"></i></a>
                                     </td>
                                 </tr>
-                                <tr>
-                                    <td><a href="../equipamentos/detalhes.php"><strong>06.001.00</strong> — Ventilador Dräger</a></td>
-                                    <td>20/06/2021</td>
-                                    <td>20/06/2026</td>
-                                    <td><i class="fas fa-check-circle text-success me-1"></i>Sim — Plurianual</td>
-                                    <td>Plurianual</td>
-                                    <td>Dräger Medical</td>
-                                    <td><span class="badge bg-success">Válida</span></td>
-                                    <td class="text-center">
-                                        <a href="detalhes.php" class="btn btn-sm btn-outline-info me-1"><i class="fas fa-eye"></i></a>
-                                        <a href="editar.php" class="btn btn-sm btn-outline-warning me-1"><i class="fas fa-pen-to-square"></i></a>
-                                        <a href="apagar.php" class="btn btn-sm btn-outline-danger"><i class="fas fa-trash-can"></i></a>
-                                    </td>
-                                </tr>
-                                <tr>
-                                    <td><a href="../equipamentos/detalhes.php"><strong>03.005.00</strong> — Bomba B. Braun</a></td>
-                                    <td>10/08/2020</td>
-                                    <td class="text-danger fw-semibold">10/08/2023</td>
-                                    <td><i class="fas fa-times-circle text-danger me-1"></i>Não</td>
-                                    <td>—</td>
-                                    <td>—</td>
-                                    <td><span class="badge bg-danger">Expirada</span></td>
-                                    <td class="text-center">
-                                        <a href="detalhes.php" class="btn btn-sm btn-outline-info me-1"><i class="fas fa-eye"></i></a>
-                                        <a href="editar.php" class="btn btn-sm btn-outline-warning me-1"><i class="fas fa-pen-to-square"></i></a>
-                                        <a href="apagar.php" class="btn btn-sm btn-outline-danger"><i class="fas fa-trash-can"></i></a>
-                                    </td>
-                                </tr>
+                                <?php endforeach; endif; ?>
                             </tbody>
                         </table>
                     </div>
                 </div>
-                <div class="card-footer text-muted small">3 registos de garantia</div>
+                <div class="card-footer text-muted small"><?= count($resultados) ?> registo(s) de garantia</div>
             </div>
         </main>
     </div>

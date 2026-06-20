@@ -5,6 +5,29 @@ redirect_if_not_logged();
 <?php include '../../includes/header.php'; ?>
 <?php include '../../includes/nav.php'; ?>
 
+<?php
+try {
+    $ligacao = new PDO(
+        "mysql:host=" . MYSQL_HOST . ";dbname=" . MYSQL_DATABASE . ";charset=utf8",
+        MYSQL_USERNAME,
+        MYSQL_PASSWORD
+    );
+    $ligacao->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
+    $resultados = $ligacao->query("
+        SELECT d.*, e.codigo, e.designacao
+        FROM documentos d
+        LEFT JOIN equipamentos e ON d.id_equipamento = e.id
+        WHERE d.deleted_at IS NULL
+        ORDER BY d.data_documento DESC
+    ")->fetchAll(PDO::FETCH_OBJ);
+    $erro = '';
+} catch (PDOException $err) {
+    $erro = "Aconteceu um erro na ligação.";
+    $resultados = [];
+}
+$ligacao = null;
+?>
+
 <div class="container-fluid">
     <div class="row">
         <?php include '../../includes/sidebar.php'; ?>
@@ -64,71 +87,29 @@ redirect_if_not_logged();
                                 </tr>
                             </thead>
                             <tbody id="tabelaCorpo">
+                                <?php if (!empty($erro)): ?>
+                                    <tr><td colspan="6" class="text-center text-danger py-3"><?= htmlspecialchars($erro) ?></td></tr>
+                                <?php elseif (empty($resultados)): ?>
+                                    <tr><td colspan="6" class="text-center text-muted py-3">Nenhum documento encontrado.</td></tr>
+                                <?php else: foreach ($resultados as $d): ?>
                                 <tr>
-                                    <td><span class="badge bg-info text-dark">Manual de utilizador</span></td>
-                                    <td>Manual IntelliVue MP5 PT</td>
-                                    <td><a href="../equipamentos/detalhes.php">04.002.00 — Monitor multiparamétrico</a></td>
-                                    <td>15/03/2022</td>
+                                    <td><span class="badge bg-secondary"><?= htmlspecialchars($d->tipo) ?></span></td>
+                                    <td><?= htmlspecialchars($d->titulo) ?></td>
+                                    <td><a href="../equipamentos/detalhes.php?id=<?= $d->id_equipamento ?>"><?= htmlspecialchars($d->codigo) ?> — <?= htmlspecialchars($d->designacao) ?></a></td>
+                                    <td><?= $d->data_documento ? date('d/m/Y', strtotime($d->data_documento)) : '—' ?></td>
                                     <td class="text-muted">—</td>
                                     <td class="text-center">
-                                        <a href="detalhes.php" class="btn btn-sm btn-outline-info me-1"><i class="fas fa-eye"></i></a>
-                                        <a href="editar.php" class="btn btn-sm btn-outline-warning me-1"><i class="fas fa-pen-to-square"></i></a>
-                                        <a href="apagar.php" class="btn btn-sm btn-outline-danger"><i class="fas fa-trash-can"></i></a>
+                                        <a href="detalhes.php?id=<?= $d->id ?>" class="btn btn-sm btn-outline-info me-1"><i class="fas fa-eye"></i></a>
+                                        <a href="editar.php?id=<?= $d->id ?>" class="btn btn-sm btn-outline-warning me-1"><i class="fas fa-pen-to-square"></i></a>
+                                        <a href="apagar.php?id=<?= $d->id ?>" class="btn btn-sm btn-outline-danger"><i class="fas fa-trash-can"></i></a>
                                     </td>
                                 </tr>
-                                <tr>
-                                    <td><span class="badge bg-warning text-dark">Cert. calibração</span></td>
-                                    <td>Calibração Bomba Infusão 2024</td>
-                                    <td><a href="../equipamentos/detalhes.php">03.005.00 — Bomba de infusão</a></td>
-                                    <td>10/01/2024</td>
-                                    <td class="text-danger fw-semibold">10/01/2025 <i class="fas fa-exclamation-circle ms-1"></i></td>
-                                    <td class="text-center">
-                                        <a href="detalhes.php" class="btn btn-sm btn-outline-info me-1"><i class="fas fa-eye"></i></a>
-                                        <a href="editar.php" class="btn btn-sm btn-outline-warning me-1"><i class="fas fa-pen-to-square"></i></a>
-                                        <a href="apagar.php" class="btn btn-sm btn-outline-danger"><i class="fas fa-trash-can"></i></a>
-                                    </td>
-                                </tr>
-                                <tr>
-                                    <td><span class="badge bg-secondary">Contrato manutenção</span></td>
-                                    <td>Contrato Philips 2024-2025</td>
-                                    <td><a href="../equipamentos/detalhes.php">04.002.00 — Monitor multiparamétrico</a></td>
-                                    <td>01/01/2024</td>
-                                    <td class="text-warning fw-semibold">31/12/2025</td>
-                                    <td class="text-center">
-                                        <a href="detalhes.php" class="btn btn-sm btn-outline-info me-1"><i class="fas fa-eye"></i></a>
-                                        <a href="editar.php" class="btn btn-sm btn-outline-warning me-1"><i class="fas fa-pen-to-square"></i></a>
-                                        <a href="apagar.php" class="btn btn-sm btn-outline-danger"><i class="fas fa-trash-can"></i></a>
-                                    </td>
-                                </tr>
-                                <tr>
-                                    <td><span class="badge bg-primary">Manual de serviço</span></td>
-                                    <td>Service Manual Evita V500</td>
-                                    <td><a href="../equipamentos/detalhes.php">06.001.00 — Ventilador pulmonar</a></td>
-                                    <td>20/06/2021</td>
-                                    <td class="text-muted">—</td>
-                                    <td class="text-center">
-                                        <a href="detalhes.php" class="btn btn-sm btn-outline-info me-1"><i class="fas fa-eye"></i></a>
-                                        <a href="editar.php" class="btn btn-sm btn-outline-warning me-1"><i class="fas fa-pen-to-square"></i></a>
-                                        <a href="apagar.php" class="btn btn-sm btn-outline-danger"><i class="fas fa-trash-can"></i></a>
-                                    </td>
-                                </tr>
-                                <tr>
-                                    <td><span class="badge bg-dark">Fatura / Aquisição</span></td>
-                                    <td>Fatura Desfibrilhador Zoll 2021</td>
-                                    <td><a href="../equipamentos/detalhes.php">02.003.00 — Desfibrilhador</a></td>
-                                    <td>05/09/2021</td>
-                                    <td class="text-muted">—</td>
-                                    <td class="text-center">
-                                        <a href="detalhes.php" class="btn btn-sm btn-outline-info me-1"><i class="fas fa-eye"></i></a>
-                                        <a href="editar.php" class="btn btn-sm btn-outline-warning me-1"><i class="fas fa-pen-to-square"></i></a>
-                                        <a href="apagar.php" class="btn btn-sm btn-outline-danger"><i class="fas fa-trash-can"></i></a>
-                                    </td>
-                                </tr>
+                                <?php endforeach; endif; ?>
                             </tbody>
                         </table>
                     </div>
                 </div>
-                <div class="card-footer text-muted small">5 documentos registados</div>
+                <div class="card-footer text-muted small"><?= count($resultados) ?> documento(s) registado(s)</div>
             </div>
         </main>
     </div>

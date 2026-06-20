@@ -5,6 +5,23 @@ redirect_if_not_logged();
 <?php include '../../includes/header.php'; ?>
 <?php include '../../includes/nav.php'; ?>
 
+<?php
+try {
+    $ligacao = new PDO(
+        "mysql:host=" . MYSQL_HOST . ";dbname=" . MYSQL_DATABASE . ";charset=utf8",
+        MYSQL_USERNAME,
+        MYSQL_PASSWORD
+    );
+    $ligacao->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
+    $resultados = $ligacao->query("SELECT * FROM fornecedores WHERE deleted_at IS NULL ORDER BY nome")->fetchAll(PDO::FETCH_OBJ);
+    $erro = '';
+} catch (PDOException $err) {
+    $erro = "Aconteceu um erro na ligação.";
+    $resultados = [];
+}
+$ligacao = null;
+?>
+
 <div class="container-fluid">
     <div class="row">
         <?php include '../../includes/sidebar.php'; ?>
@@ -58,71 +75,38 @@ redirect_if_not_logged();
                                 <tr>
                                     <th>Nome da Empresa</th>
                                     <th>NIF</th>
-                                    <th>Tipo</th>
+                                    <th>País</th>
                                     <th>Telefone</th>
                                     <th>Email</th>
-                                    <th>Pessoa de Contacto</th>
+                                    <th>Cidade</th>
                                     <th class="text-center">Ações</th>
                                 </tr>
                             </thead>
                             <tbody id="tabelaCorpo">
+                                <?php if (!empty($erro)): ?>
+                                    <tr><td colspan="7" class="text-center text-danger py-3"><?= htmlspecialchars($erro) ?></td></tr>
+                                <?php elseif (empty($resultados)): ?>
+                                    <tr><td colspan="7" class="text-center text-muted py-3">Nenhum fornecedor encontrado.</td></tr>
+                                <?php else: foreach ($resultados as $f): ?>
                                 <tr>
-                                    <td><strong>Philips Healthcare Portugal</strong></td>
-                                    <td>500 123 456</td>
-                                    <td><span class="badge bg-primary">Fabricante</span></td>
-                                    <td>+351 21 345 6789</td>
-                                    <td>info@philips.pt</td>
-                                    <td>Ana Rodrigues</td>
+                                    <td><strong><?= htmlspecialchars($f->nome) ?></strong></td>
+                                    <td><?= htmlspecialchars($f->nif ?? '—') ?></td>
+                                    <td><?= htmlspecialchars($f->pais ?? '—') ?></td>
+                                    <td><?= htmlspecialchars($f->telefone ?? '—') ?></td>
+                                    <td><?= htmlspecialchars($f->email ?? '—') ?></td>
+                                    <td><?= htmlspecialchars($f->cidade ?? '—') ?></td>
                                     <td class="text-center">
-                                        <a href="detalhes.php" class="btn btn-sm btn-outline-primary me-1" title="Ver"><i class="fas fa-eye"></i></a>
-                                        <a href="editar.php" class="btn btn-sm btn-outline-warning me-1" title="Editar"><i class="fas fa-pen-to-square"></i></a>
-                                        <a href="apagar.php" class="btn btn-sm btn-outline-danger" title="Remover"><i class="fas fa-trash-can"></i></a>
+                                        <a href="detalhes.php?id=<?= $f->id ?>" class="btn btn-sm btn-outline-primary me-1" title="Ver"><i class="fas fa-eye"></i></a>
+                                        <a href="editar.php?id=<?= $f->id ?>" class="btn btn-sm btn-outline-warning me-1" title="Editar"><i class="fas fa-pen-to-square"></i></a>
+                                        <a href="apagar.php?id=<?= $f->id ?>" class="btn btn-sm btn-outline-danger" title="Remover"><i class="fas fa-trash-can"></i></a>
                                     </td>
                                 </tr>
-                                <tr>
-                                    <td><strong>Dräger Medical Portugal</strong></td>
-                                    <td>502 987 654</td>
-                                    <td><span class="badge bg-primary">Fabricante</span></td>
-                                    <td>+351 21 456 7890</td>
-                                    <td>contacto@draeger.pt</td>
-                                    <td>Carlos Mendes</td>
-                                    <td class="text-center">
-                                        <a href="detalhes.php" class="btn btn-sm btn-outline-primary me-1"><i class="fas fa-eye"></i></a>
-                                        <a href="editar.php" class="btn btn-sm btn-outline-warning me-1"><i class="fas fa-pen-to-square"></i></a>
-                                        <a href="apagar.php" class="btn btn-sm btn-outline-danger"><i class="fas fa-trash-can"></i></a>
-                                    </td>
-                                </tr>
-                                <tr>
-                                    <td><strong>MedTech Services</strong></td>
-                                    <td>508 654 321</td>
-                                    <td><span class="badge bg-success">Assistência técnica</span></td>
-                                    <td>+351 22 567 8901</td>
-                                    <td>servicos@medtech.pt</td>
-                                    <td>Rita Ferreira</td>
-                                    <td class="text-center">
-                                        <a href="detalhes.php" class="btn btn-sm btn-outline-primary me-1"><i class="fas fa-eye"></i></a>
-                                        <a href="editar.php" class="btn btn-sm btn-outline-warning me-1"><i class="fas fa-pen-to-square"></i></a>
-                                        <a href="apagar.php" class="btn btn-sm btn-outline-danger"><i class="fas fa-trash-can"></i></a>
-                                    </td>
-                                </tr>
-                                <tr>
-                                    <td><strong>B. Braun Portugal</strong></td>
-                                    <td>501 333 222</td>
-                                    <td><span class="badge bg-secondary">Distribuidor</span></td>
-                                    <td>+351 21 678 9012</td>
-                                    <td>info@bbraun.pt</td>
-                                    <td>João Oliveira</td>
-                                    <td class="text-center">
-                                        <a href="detalhes.php" class="btn btn-sm btn-outline-primary me-1"><i class="fas fa-eye"></i></a>
-                                        <a href="editar.php" class="btn btn-sm btn-outline-warning me-1"><i class="fas fa-pen-to-square"></i></a>
-                                        <a href="apagar.php" class="btn btn-sm btn-outline-danger"><i class="fas fa-trash-can"></i></a>
-                                    </td>
-                                </tr>
+                                <?php endforeach; endif; ?>
                             </tbody>
                         </table>
                     </div>
                 </div>
-                <div class="card-footer text-muted small">A mostrar 4 fornecedores</div>
+                <div class="card-footer text-muted small">A mostrar <?= count($resultados) ?> fornecedor(es)</div>
             </div>
         </main>
     </div>
