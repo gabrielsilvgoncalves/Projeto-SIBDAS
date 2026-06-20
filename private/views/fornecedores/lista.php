@@ -70,7 +70,7 @@ $ligacao = null;
             <div class="card border-0 shadow-sm">
                 <div class="card-body p-0">
                     <div class="table-responsive">
-                        <table class="table table-striped table-hover align-middle mb-0">
+                        <table id="tabela-fornecedores" class="table table-striped table-hover align-middle mb-0">
                             <thead>
                                 <tr>
                                     <th>Nome da Empresa</th>
@@ -106,7 +106,10 @@ $ligacao = null;
                         </table>
                     </div>
                 </div>
-                <div class="card-footer text-muted small">A mostrar <?= count($resultados) ?> fornecedor(es)</div>
+                <div class="card-footer text-muted small d-flex justify-content-between">
+                    <span>A mostrar <?= count($resultados) ?> fornecedor(es)</span>
+                    <span>Ordenado por: <strong>Nome</strong></span>
+                </div>
             </div>
         </main>
     </div>
@@ -122,6 +125,16 @@ $ligacao = null;
         });
     }
     document.getElementById('pesquisa').addEventListener('keyup', pesquisar);
+</script>
+
+<script>
+    $(document).ready(function () {
+        $('#tabela-fornecedores').DataTable({
+            language: { url: 'https://cdn.datatables.net/plug-ins/1.13.6/i18n/pt-PT.json' },
+            pageLength: 10,
+            order: []
+        });
+    });
 </script>
 
 <?php include '../../includes/footer.php'; ?>

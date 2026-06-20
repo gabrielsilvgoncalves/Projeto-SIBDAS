@@ -88,7 +88,7 @@ $em30dias = date('Y-m-d', strtotime('+30 days'));
             <div class="card border-0 shadow-sm">
                 <div class="card-body p-0">
                     <div class="table-responsive">
-                        <table class="table table-striped table-hover align-middle mb-0">
+                        <table id="tabela-garantias" class="table table-striped table-hover align-middle mb-0">
                             <thead>
                                 <tr>
                                     <th>Equipamento</th>
@@ -137,7 +137,10 @@ $em30dias = date('Y-m-d', strtotime('+30 days'));
                         </table>
                     </div>
                 </div>
-                <div class="card-footer text-muted small"><?= count($resultados) ?> registo(s) de garantia</div>
+                <div class="card-footer text-muted small d-flex justify-content-between">
+                    <span><?= count($resultados) ?> registo(s) de garantia</span>
+                    <span>Ordenado por: <strong>Fim de Garantia</strong></span>
+                </div>
             </div>
         </main>
     </div>
@@ -154,6 +157,16 @@ $em30dias = date('Y-m-d', strtotime('+30 days'));
         });
     }
     document.getElementById('pesquisa').addEventListener('keyup', pesquisar);
+</script>
+
+<script>
+    $(document).ready(function () {
+        $('#tabela-garantias').DataTable({
+            language: { url: 'https://cdn.datatables.net/plug-ins/1.13.6/i18n/pt-PT.json' },
+            pageLength: 10,
+            order: []
+        });
+    });
 </script>
 
 <?php include '../../includes/footer.php'; ?>

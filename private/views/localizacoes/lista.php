@@ -43,7 +43,7 @@ $ligacao = null;
             <div class="card border-0 shadow-sm">
                 <div class="card-body p-0">
                     <div class="table-responsive">
-                        <table class="table table-striped table-hover align-middle mb-0">
+                        <table id="tabela-localizacoes" class="table table-striped table-hover align-middle mb-0">
                             <thead>
                                 <tr><th>Edifício</th><th>Piso</th><th>Serviço / Departamento</th><th>Sala / Gabinete</th><th class="text-center">Nº Equip.</th><th class="text-center">Ações</th></tr>
                             </thead>
@@ -69,10 +69,23 @@ $ligacao = null;
                         </table>
                     </div>
                 </div>
-                <div class="card-footer text-muted small"><?= count($resultados) ?> localização(ões) registada(s)</div>
+                <div class="card-footer text-muted small d-flex justify-content-between">
+                    <span><?= count($resultados) ?> localização(ões) registada(s)</span>
+                    <span>Ordenado por: <strong>Nome</strong></span>
+                </div>
             </div>
         </main>
     </div>
 </div>
+
+<script>
+    $(document).ready(function () {
+        $('#tabela-localizacoes').DataTable({
+            language: { url: 'https://cdn.datatables.net/plug-ins/1.13.6/i18n/pt-PT.json' },
+            pageLength: 10,
+            order: []
+        });
+    });
+</script>
 
 <?php include '../../includes/footer.php'; ?>

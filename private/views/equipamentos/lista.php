@@ -105,7 +105,7 @@ $ligacao = null;
             <div class="card border-0 shadow-sm">
                 <div class="card-body p-0">
                     <div class="table-responsive">
-                        <table class="table table-striped table-hover align-middle mb-0">
+                        <table id="tabela-equipamentos" class="table table-striped table-hover align-middle mb-0">
                             <thead>
                                 <tr>
                                     <th>Código</th>
@@ -165,7 +165,7 @@ $ligacao = null;
                 </div>
                 <div class="card-footer text-muted small d-flex justify-content-between">
                     <span>A mostrar <?= count($resultados) ?> equipamento(s)</span>
-                    <span>Ordenar por: <strong>Código</strong></span>
+                    <span>Ordenado por: <strong>Código</strong></span>
                 </div>
             </div>
         </main>
@@ -190,6 +190,16 @@ $ligacao = null;
         });
     }
     document.getElementById('pesquisa').addEventListener('keyup', pesquisar);
+</script>
+
+<script>
+    $(document).ready(function () {
+        $('#tabela-equipamentos').DataTable({
+            language: { url: 'https://cdn.datatables.net/plug-ins/1.13.6/i18n/pt-PT.json' },
+            pageLength: 10,
+            order: []
+        });
+    });
 </script>
 
 <?php include '../../includes/footer.php'; ?>
