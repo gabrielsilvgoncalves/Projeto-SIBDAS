@@ -58,6 +58,11 @@ if (!empty($_SESSION['server_error'])) {
                             Entrar <i class="fa-solid fa-right-to-bracket ms-2"></i>
                         </button>
                     </div>
+                    <div class="d-grid">
+                        <a href="/SIBDAS_projeto_final/public/index.php" class="btn btn-outline-secondary btn-sm">
+                            <i class="fa-solid fa-arrow-left me-1"></i> Voltar ao início
+                        </a>
+                    </div>
 
                     <!-- -------------------------------------------------------------------- -->
                     <!-- APRESENTAÇÃO DE MENSAGENS DE ERRO (VALIDAÇÃO E SERVIDOR) -->
