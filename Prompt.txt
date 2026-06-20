@@ -1,15 +1,52 @@
-1. Abrir o ficheiro config/config.php e acrescentar as seguintes definições:
-define('MYSQL_HOST', 'localhost');
-define('MYSQL_DATABASE', 'isep-ginasio');
-define('MYSQL_USERNAME', 'sibdas2025');
-define('MYSQL_PASSWORD', '3LduNkJe55lVk0iaQRXvV0j1tZpA7OW5');
-define('MYSQL_AES_KEY', 'Vduu47qL51hLn6bkYkY6NlO1nivsmdfD'); 
+1. Abrir o ficheiro lista.php. Abrir o ficheiro lista.php, localizado em: /private/views/clientes/lista.php
+no Visual Studio Code ou outro editor.
+2. Ligar à base de dados e executar a query
+Logo após este bloco existente:
+require_once __DIR__ . '/../../includes/funcoes.php';
+redirect_if_not_logged();
+include '../../includes/header.php';
+include '../../includes/nav.php';
+3. Adicionar o seguinte bloco PHP (bloco try/catch) para ligação e execução da query: 
+try {
+ $ligacao = new PDO(
+ "mysql:host=" . MYSQL_HOST . ";dbname=" . MYSQL_DATABASE . ";charset=utf8",
+ MYSQL_USERNAME,
+ MYSQL_PASSWORD
+ );
+ $ligacao->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
+ $resultados = $ligacao->query("SELECT * FROM clientes")->fetchAll(PDO::FETCH_OBJ);
+ $erro = '';
+} catch (PDOException $err) {
+ $erro = "Aconteceu um erro na ligação.";
+ $resultados = [];
+}
+// Fecha a ligação
+$ligacao = null;
 
-Constante Descrição
-MYSQL_HOST
-Endereço do servidor da base de dados. No caso de localhost, indica que o servidor corre na mesma
-máquina.
-MYSQL_DATABASE Nome da base de dados à qual se pretende aceder.
-MYSQL_USERNAME Nome de utilizador com permissões para aceder à base de dados.
-MYSQL_PASSWORD Palavra-passe do utilizador da base de dados.
-MYSQL_AES_KEY Chave opcional para operações de encriptação, útil em sistemas que armazenam dados sensíveis. 
+
+Ligação à base de dados com PDO:
+ Utiliza o objeto PDO (PHP Data Objects), que oferece uma forma segura, orientada a objetos e flexível
+de interagir com diferentes tipos de bases de dados.
+ A string de ligação (DSN) é construída com as constantes previamente definidas (MYSQL_HOST,
+MYSQL_DATABASE, etc.).
+ Define-se o charset=utf8 para garantir a correta codificação de caracteres, especialmente útil para textos
+com acentos ou símbolos especiais
+Definição do modo de erro:
+ A linha setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION) configura o PDO
+para lançar exceções (PDOException) sempre que ocorrer um erro.
+ Isto permite que os erros sejam capturados no bloco catch, facilitando a deteção e tratamento controlado
+de falhas.
+Execução da query SQL:
+ A instrução query("SELECT * FROM clientes") executa uma consulta SQL que seleciona todos os
+registos da tabela clientes.
+ Os resultados são obtidos com fetchAll(PDO::FETCH_OBJ) e armazenados como um array de objetos
+stdClass, onde cada campo da tabela é representado como uma propriedade do objeto.
+Tratamento de erros com catch:
+ Se ocorrer um erro na ligação ou na execução da query, o bloco catch captura a exceção.
+ É definida uma variável $erro com uma mensagem genérica, evitando que a aplicação quebre ou mostre
+erros técnicos ao utilizador.
+ A variável $resultados é definida como um array vazio, o que evita erros ao tentar percorrer dados
+inexistentes no frontend.
+Fecho da ligação:
+ A linha $ligacao = null; liberta explicitamente a ligação à base de dados.
+ Esta é uma boa prática, pois garante que os recursos são libertados corretamente após a sua utilização.

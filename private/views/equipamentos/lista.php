@@ -5,6 +5,28 @@ redirect_if_not_logged();
 <?php include '../../includes/header.php'; ?>
 <?php include '../../includes/nav.php'; ?>
 
+<?php
+try {
+    $ligacao = new PDO(
+        "mysql:host=" . MYSQL_HOST . ";dbname=" . MYSQL_DATABASE . ";charset=utf8",
+        MYSQL_USERNAME,
+        MYSQL_PASSWORD
+    );
+    $ligacao->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
+    $resultados = $ligacao->query("
+        SELECT e.*, l.nome AS localizacao_nome
+        FROM equipamentos e
+        LEFT JOIN localizacoes l ON e.id_localizacao = l.id
+        ORDER BY e.codigo
+    ")->fetchAll(PDO::FETCH_OBJ);
+    $erro = '';
+} catch (PDOException $err) {
+    $erro = "Aconteceu um erro na ligação.";
+    $resultados = [];
+}
+$ligacao = null;
+?>
+
 <div class="container-fluid">
     <div class="row">
         <?php include '../../includes/sidebar.php'; ?>
@@ -97,82 +119,52 @@ redirect_if_not_logged();
                                 </tr>
                             </thead>
                             <tbody id="tabelaCorpo">
-                                <tr>
-                                    <td><code>04.002.00</code></td>
-                                    <td>Monitor multiparamétrico</td>
-                                    <td>Philips / IntelliVue MP5</td>
-                                    <td>MP5-2022-45873</td>
-                                    <td>UCI</td>
-                                    <td><span class="estado-badge badge-ativo">Ativo</span></td>
-                                    <td><span class="critico-badge badge-critico-alta">Alta</span></td>
-                                    <td class="text-center">
-                                        <a href="detalhes.php" class="btn btn-sm btn-outline-primary me-1" title="Ver detalhes"><i class="fas fa-eye"></i></a>
-                                        <a href="editar.php" class="btn btn-sm btn-outline-warning me-1" title="Editar"><i class="fas fa-pen-to-square"></i></a>
-                                        <a href="apagar.php" class="btn btn-sm btn-outline-danger" title="Remover"><i class="fas fa-trash-can"></i></a>
-                                    </td>
-                                </tr>
-                                <tr>
-                                    <td><code>06.001.00</code></td>
-                                    <td>Ventilador pulmonar</td>
-                                    <td>Dräger / Evita V500</td>
-                                    <td>EV500-2021-9934</td>
-                                    <td>UCI</td>
-                                    <td><span class="estado-badge badge-ativo">Ativo</span></td>
-                                    <td><span class="critico-badge badge-critico-vida">Suporte de vida</span></td>
-                                    <td class="text-center">
-                                        <a href="detalhes.php" class="btn btn-sm btn-outline-primary me-1"><i class="fas fa-eye"></i></a>
-                                        <a href="editar.php" class="btn btn-sm btn-outline-warning me-1"><i class="fas fa-pen-to-square"></i></a>
-                                        <a href="apagar.php" class="btn btn-sm btn-outline-danger"><i class="fas fa-trash-can"></i></a>
-                                    </td>
-                                </tr>
-                                <tr>
-                                    <td><code>03.005.00</code></td>
-                                    <td>Bomba de infusão</td>
-                                    <td>B. Braun / Infusomat Space</td>
-                                    <td>INF-2020-88321</td>
-                                    <td>Medicina Interna</td>
-                                    <td><span class="estado-badge badge-manutencao">Em manutenção</span></td>
-                                    <td><span class="critico-badge badge-critico-media">Média</span></td>
-                                    <td class="text-center">
-                                        <a href="detalhes.php" class="btn btn-sm btn-outline-primary me-1"><i class="fas fa-eye"></i></a>
-                                        <a href="editar.php" class="btn btn-sm btn-outline-warning me-1"><i class="fas fa-pen-to-square"></i></a>
-                                        <a href="apagar.php" class="btn btn-sm btn-outline-danger"><i class="fas fa-trash-can"></i></a>
-                                    </td>
-                                </tr>
-                                <tr>
-                                    <td><code>02.003.00</code></td>
-                                    <td>Desfibrilhador</td>
-                                    <td>Zoll / R Series</td>
-                                    <td>ZR-2021-7712</td>
-                                    <td>Urgência</td>
-                                    <td><span class="estado-badge badge-ativo">Ativo</span></td>
-                                    <td><span class="critico-badge badge-critico-vida">Suporte de vida</span></td>
-                                    <td class="text-center">
-                                        <a href="detalhes.php" class="btn btn-sm btn-outline-primary me-1"><i class="fas fa-eye"></i></a>
-                                        <a href="editar.php" class="btn btn-sm btn-outline-warning me-1"><i class="fas fa-pen-to-square"></i></a>
-                                        <a href="apagar.php" class="btn btn-sm btn-outline-danger"><i class="fas fa-trash-can"></i></a>
-                                    </td>
-                                </tr>
-                                <tr>
-                                    <td><code>09.001.00</code></td>
-                                    <td>Ecógrafo</td>
-                                    <td>GE / Vivid S70</td>
-                                    <td>GE-2019-33201</td>
-                                    <td>Cardiologia</td>
-                                    <td><span class="estado-badge badge-calibracao">Em calibração</span></td>
-                                    <td><span class="critico-badge badge-critico-alta">Alta</span></td>
-                                    <td class="text-center">
-                                        <a href="detalhes.php" class="btn btn-sm btn-outline-primary me-1"><i class="fas fa-eye"></i></a>
-                                        <a href="editar.php" class="btn btn-sm btn-outline-warning me-1"><i class="fas fa-pen-to-square"></i></a>
-                                        <a href="apagar.php" class="btn btn-sm btn-outline-danger"><i class="fas fa-trash-can"></i></a>
-                                    </td>
-                                </tr>
+                                <?php if (!empty($erro)): ?>
+                                    <tr><td colspan="8" class="text-center text-danger py-3"><?= htmlspecialchars($erro) ?></td></tr>
+                                <?php elseif (empty($resultados)): ?>
+                                    <tr><td colspan="8" class="text-center text-muted py-3">Nenhum equipamento encontrado.</td></tr>
+                                <?php else: ?>
+                                    <?php
+                                    $estadoBadges = [
+                                        'Ativo'          => 'badge-ativo',
+                                        'Em manutenção'  => 'badge-manutencao',
+                                        'Em calibração'  => 'badge-calibracao',
+                                        'Em quarentena'  => 'badge-quarentena',
+                                        'Inativo'        => 'badge-inativo',
+                                        'Abatido'        => 'badge-abatido',
+                                    ];
+                                    $criticoBadges = [
+                                        'Baixa'           => 'badge-critico-baixa',
+                                        'Média'           => 'badge-critico-media',
+                                        'Alta'            => 'badge-critico-alta',
+                                        'Suporte de vida' => 'badge-critico-vida',
+                                    ];
+                                    foreach ($resultados as $eq):
+                                        $estadoClass  = $estadoBadges[$eq->estado] ?? '';
+                                        $criticoClass = $criticoBadges[$eq->criticidade] ?? '';
+                                    ?>
+                                    <tr>
+                                        <td><code><?= htmlspecialchars($eq->codigo) ?></code></td>
+                                        <td><?= htmlspecialchars($eq->designacao) ?></td>
+                                        <td><?= htmlspecialchars($eq->marca) ?> / <?= htmlspecialchars($eq->modelo) ?></td>
+                                        <td><?= htmlspecialchars($eq->numero_serie) ?></td>
+                                        <td><?= htmlspecialchars($eq->localizacao_nome ?? '-') ?></td>
+                                        <td><span class="estado-badge <?= $estadoClass ?>"><?= htmlspecialchars($eq->estado) ?></span></td>
+                                        <td><span class="critico-badge <?= $criticoClass ?>"><?= htmlspecialchars($eq->criticidade) ?></span></td>
+                                        <td class="text-center">
+                                            <a href="detalhes.php?id=<?= $eq->id ?>" class="btn btn-sm btn-outline-primary me-1" title="Ver detalhes"><i class="fas fa-eye"></i></a>
+                                            <a href="editar.php?id=<?= $eq->id ?>" class="btn btn-sm btn-outline-warning me-1" title="Editar"><i class="fas fa-pen-to-square"></i></a>
+                                            <a href="apagar.php?id=<?= $eq->id ?>" class="btn btn-sm btn-outline-danger" title="Remover"><i class="fas fa-trash-can"></i></a>
+                                        </td>
+                                    </tr>
+                                    <?php endforeach; ?>
+                                <?php endif; ?>
                             </tbody>
                         </table>
                     </div>
                 </div>
                 <div class="card-footer text-muted small d-flex justify-content-between">
-                    <span>A mostrar 5 de 1 487 equipamentos</span>
+                    <span>A mostrar <?= count($resultados) ?> equipamento(s)</span>
                     <span>Ordenar por: <strong>Código</strong></span>
                 </div>
             </div>
