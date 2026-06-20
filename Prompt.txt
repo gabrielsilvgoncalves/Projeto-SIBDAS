@@ -1,69 +1,15 @@
-1. Abrir o ficheiro config/config.php (/isep-ginasio/config/config.php). Este ficheiro já existe e contém outras
-definições globais do projeto (por exemplo: APP_NAME, APP_VERSION, etc.)
-2. Adicionar a variável BASE_URL. Na primeira secção do ficheiro, adicionar a seguinte linha:
-define('BASE_URL', '/isep-ginasio');
-Esta linha deve ser colocada acima de qualquer função ou retorno de valor, idealmente no topo, depois
-da abertura <?php.
-3. Usar BASE_URL nos redirecionamentos No ficheiro private/includes/funcoes.php, garantir que está
-incluído o config.php:
-require_once __DIR__ . '/../../config/config.php';
-E depois, na função redirect_if_not_logged, usar BASE_URL:
-function redirect_if_not_logged($redirect_to = '/public/login.php')
-{
- start_session();
- if (!check_session()) {
- header("Location: " . BASE_URL . $redirect_to);
- exit;
- }
-} 
+1. Abrir o ficheiro config/config.php e acrescentar as seguintes definições:
+define('MYSQL_HOST', 'localhost');
+define('MYSQL_DATABASE', 'isep-ginasio');
+define('MYSQL_USERNAME', 'sibdas2025');
+define('MYSQL_PASSWORD', '3LduNkJe55lVk0iaQRXvV0j1tZpA7OW5');
+define('MYSQL_AES_KEY', 'Vduu47qL51hLn6bkYkY6NlO1nivsmdfD'); 
 
-Bem como na função logout_and_redirect 
-function logout_and_redirect($redirect_to = '/public/login.php')
-{
- start_session(); // Garante que a sessão foi iniciada
- session_unset(); // Remove todas as variáveis da sessão
- session_destroy(); // Destrói completamente a sessão
- // Redireciona para a página de login com caminho absoluto
- header("Location: " . BASE_URL . $redirect_to);
- exit;
-}
-
-Ficheiro final - funções.php 
-<?php
-require_once __DIR__ . '/../../config/config.php';
-// Inicia a sessão se ainda não estiver iniciada
-function start_session()
-{
- if (session_status() == PHP_SESSION_NONE) {
- session_start();
- }
-}
-// Verifica se a sessão do utilizador está ativa
-function check_session()
-{
- return isset($_SESSION['utilizador']);
-}
-// Redireciona automaticamente se não houver sessão iniciada
-function redirect_if_not_logged($redirect_to = '/public/login.php')
-{
- start_session();
- if (!check_session()) {
- header("Location: " . BASE_URL . $redirect_to);
- exit;
- }
-}
-function logout_and_redirect($redirect_to = '/public/login.php')
-{
- start_session(); // Garante que a sessão foi iniciada
- session_unset(); // Remove todas as variáveis da sessão
- session_destroy(); // Destrói completamente a sessão
- // Redireciona para a página de login com caminho absoluto
- header("Location: " . BASE_URL . $redirect_to);
- exit;
-} 
-4. Testar todas as páginas e verificar se redireciona para login se não tiver sessão autenticada. Fazer logout e testar
-diretamente
- http://127.0.0.1/isep-ginasio/private/views/clientes/lista.php
- http://127.0.0.1/isep-ginasio/private/views/clientes/editar.php
- http://127.0.0.1/isep-ginasio/private/views/clientes/apagar.php
- http://127.0.0.1/isep-ginasio/private/views/clientes/detalhes.php
+Constante Descrição
+MYSQL_HOST
+Endereço do servidor da base de dados. No caso de localhost, indica que o servidor corre na mesma
+máquina.
+MYSQL_DATABASE Nome da base de dados à qual se pretende aceder.
+MYSQL_USERNAME Nome de utilizador com permissões para aceder à base de dados.
+MYSQL_PASSWORD Palavra-passe do utilizador da base de dados.
+MYSQL_AES_KEY Chave opcional para operações de encriptação, útil em sistemas que armazenam dados sensíveis. 
