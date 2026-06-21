@@ -86,15 +86,26 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 
     // 6. Gravar na base de dados
     if (empty($erros)) {
-        $data_aq_sql = !empty($data_aquisicao) ? "'$data_aquisicao'" : "NULL";
         try {
             $ligacao = new PDO(
                 "mysql:host=" . MYSQL_HOST . ";dbname=" . MYSQL_DATABASE . ";charset=utf8",
                 MYSQL_USERNAME,
                 MYSQL_PASSWORD
             );
-            $ligacao->exec("INSERT INTO equipamentos (codigo, designacao, marca, modelo, numero_serie, categoria, estado, criticidade, data_aquisicao, created_at, updated_at)
-                VALUES ('$codigo', '$designacao', '$marca', '$modelo', '$num_serie', '$categoria', '$estado', '$criticidade', $data_aq_sql, NOW(), NOW())");
+            $sql = "INSERT INTO equipamentos (codigo, designacao, marca, modelo, numero_serie, categoria, estado, criticidade, data_aquisicao, created_at, updated_at)
+                VALUES (:codigo, :designacao, :marca, :modelo, :numero_serie, :categoria, :estado, :criticidade, :data_aquisicao, NOW(), NOW())";
+            $stmt = $ligacao->prepare($sql);
+            $stmt->execute([
+                ':codigo'         => $codigo,
+                ':designacao'     => $designacao,
+                ':marca'          => $marca,
+                ':modelo'         => $modelo,
+                ':numero_serie'   => $num_serie,
+                ':categoria'      => $categoria,
+                ':estado'         => $estado,
+                ':criticidade'    => $criticidade,
+                ':data_aquisicao' => !empty($data_aquisicao) ? $data_aquisicao : null,
+            ]);
             header('Location: lista.php');
             exit;
         } catch (PDOException $err) {

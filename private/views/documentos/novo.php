@@ -65,20 +65,26 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
             'Declaração de conformidade' => 'Outro',
             'Relatório técnico'          => 'Relatório técnico',
         ];
-        $tipo_db     = $tiposMap[$tipo] ?? 'Outro';
-        $codigo_eq   = trim(explode('—', $equipamento)[0]);
-        $data_doc_sql = !empty($data_doc) ? "'$data_doc'" : "NULL";
+        $tipo_db   = $tiposMap[$tipo] ?? 'Outro';
+        $codigo_eq = trim(explode('—', $equipamento)[0]);
         try {
             $ligacao = new PDO(
                 "mysql:host=" . MYSQL_HOST . ";dbname=" . MYSQL_DATABASE . ";charset=utf8",
                 MYSQL_USERNAME,
                 MYSQL_PASSWORD
             );
-            $ligacao->exec("INSERT INTO documentos (id_equipamento, tipo, titulo, data_documento, created_at, updated_at)
+            $sql = "INSERT INTO documentos (id_equipamento, tipo, titulo, data_documento, created_at, updated_at)
                 VALUES (
-                    (SELECT id FROM equipamentos WHERE codigo = '$codigo_eq' LIMIT 1),
-                    '$tipo_db', '$nome_doc', $data_doc_sql, NOW(), NOW()
-                )");
+                    (SELECT id FROM equipamentos WHERE codigo = :codigo_eq LIMIT 1),
+                    :tipo, :titulo, :data_documento, NOW(), NOW()
+                )";
+            $stmt = $ligacao->prepare($sql);
+            $stmt->execute([
+                ':codigo_eq'      => $codigo_eq,
+                ':tipo'           => $tipo_db,
+                ':titulo'         => $nome_doc,
+                ':data_documento' => !empty($data_doc) ? $data_doc : null,
+            ]);
             header('Location: lista.php');
             exit;
         } catch (PDOException $err) {

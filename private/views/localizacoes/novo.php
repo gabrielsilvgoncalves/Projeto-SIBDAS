@@ -43,8 +43,15 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                 MYSQL_USERNAME,
                 MYSQL_PASSWORD
             );
-            $ligacao->exec("INSERT INTO localizacoes (nome, descricao, piso, ala, created_at, updated_at)
-                VALUES ('$servico', '$sala', '$piso', '$edificio', NOW(), NOW())");
+            $sql = "INSERT INTO localizacoes (nome, descricao, piso, ala, created_at, updated_at)
+                VALUES (:nome, :descricao, :piso, :ala, NOW(), NOW())";
+            $stmt = $ligacao->prepare($sql);
+            $stmt->execute([
+                ':nome'      => $servico,
+                ':descricao' => $sala,
+                ':piso'      => $piso,
+                ':ala'       => $edificio,
+            ]);
             header('Location: lista.php');
             exit;
         } catch (PDOException $err) {

@@ -1,6 +1,84 @@
-﻿<?php
+<?php
 require_once __DIR__ . '/../../includes/funcoes.php';
 redirect_if_not_logged();
+
+$erros = [];
+$erro_sistema = "";
+
+$id = filter_input(INPUT_GET, 'id', FILTER_VALIDATE_INT);
+if (!$id) { header('Location: lista.php'); exit; }
+
+try {
+    $ligacao = new PDO(
+        "mysql:host=" . MYSQL_HOST . ";dbname=" . MYSQL_DATABASE . ";charset=utf8",
+        MYSQL_USERNAME,
+        MYSQL_PASSWORD
+    );
+    $stmt = $ligacao->prepare(
+        "SELECT g.*, e.codigo AS eq_codigo, e.designacao AS eq_designacao
+         FROM garantias g
+         LEFT JOIN equipamentos e ON g.id_equipamento = e.id
+         WHERE g.id = :id
+         LIMIT 1"
+    );
+    $stmt->execute([':id' => $id]);
+    $g = $stmt->fetch(PDO::FETCH_OBJ);
+    if (!$g) { header('Location: lista.php'); exit; }
+} catch (PDOException $err) {
+    die("Erro de ligação: " . $err->getMessage());
+}
+
+if ($_SERVER["REQUEST_METHOD"] == "POST") {
+    $data_inicio = $_POST["data_inicio"] ?? "";
+    $data_fim    = $_POST["data_fim"] ?? "";
+    $tem_contrato = $_POST["tem_contrato"] ?? "nao";
+
+    if (empty($data_inicio)) {
+        $erros[] = "A Data de Início é obrigatória.";
+    } elseif (!preg_match('/^\d{4}-\d{2}-\d{2}$/', $data_inicio)) {
+        $erros[] = "Formato de data de início inválido.";
+    } else {
+        $p = explode('-', $data_inicio);
+        if (!checkdate((int)$p[1], (int)$p[2], (int)$p[0])) $erros[] = "Data de início inválida.";
+    }
+    if (empty($data_fim)) {
+        $erros[] = "A Data de Fim é obrigatória.";
+    } elseif (!preg_match('/^\d{4}-\d{2}-\d{2}$/', $data_fim)) {
+        $erros[] = "Formato de data de fim inválido.";
+    } else {
+        $p = explode('-', $data_fim);
+        if (!checkdate((int)$p[1], (int)$p[2], (int)$p[0])) {
+            $erros[] = "Data de fim inválida.";
+        } elseif (!empty($data_inicio) && $data_fim <= $data_inicio) {
+            $erros[] = "A Data de Fim deve ser posterior à Data de Início.";
+        }
+    }
+
+    if (empty($erros)) {
+        $tipo_garantia = ($tem_contrato === 'sim') ? 'Contrato de manutenção' : 'Fabricante';
+        try {
+            $sql = "UPDATE garantias SET tipo = :tipo, data_inicio = :data_inicio, data_fim = :data_fim, updated_at = NOW() WHERE id = :id";
+            $stmt = $ligacao->prepare($sql);
+            $stmt->execute([
+                ':tipo'        => $tipo_garantia,
+                ':data_inicio' => $data_inicio,
+                ':data_fim'    => $data_fim,
+                ':id'          => $id,
+            ]);
+            header('Location: lista.php');
+            exit;
+        } catch (PDOException $err) {
+            $erro_sistema = "Erro ao gravar os dados: " . $err->getMessage();
+        }
+    }
+    $g->data_inicio  = $data_inicio;
+    $g->data_fim     = $data_fim;
+    $g->tem_contrato = $tem_contrato;
+}
+
+$ligacao = null;
+
+$tem_contrato_atual = ($g->tipo === 'Contrato de manutenção') ? 'sim' : 'nao';
 ?>
 <?php include '../../includes/header.php'; ?>
 <?php include '../../includes/nav.php'; ?>
@@ -9,88 +87,102 @@ redirect_if_not_logged();
     <div class="row">
         <?php include '../../includes/sidebar.php'; ?>
 
-
             <main class="col-md-9 col-lg-10 p-4" style="background-color: #f2f2f2;">
-                <div class="d-flex justify-content-between align-items-center mb-3">
-                    <h2 class="mb-0 fw-bold" style="color: #004f63;">
-                        <i class="fas fa-pen-to-square me-2"></i> Editar Garantia
-                    </h2>
-                    <a href="lista.php" class="btn btn-outline-secondary btn-sm">
-                        <i class="fas fa-arrow-left me-1"></i> Voltar
-                    </a>
-                </div>
-                <hr>
-
-                <div class="card border-0 shadow-sm">
-                    <div class="card-body p-4">
-                        <form id="formEditar" novalidate>
-                            <div class="row g-3">
-                                <div class="col-md-12">
-                                    <label for="equipamento" class="form-label fw-semibold">Equipamento <span class="text-danger">*</span></label>
-                                    <select class="form-select" id="equipamento" required>
-                                        <option value="04.002.00" selected>04.002.00 — Monitor multiparamétrico (Philips IntelliVue MP5)</option>
-                                        <option value="06.001.00">06.001.00 — Ventilador Dräger Evita V500</option>
-                                        <option value="03.005.00">03.005.00 — Bomba de infusão B.Braun</option>
-                                    </select>
+                <div class="d-flex justify-content-center">
+                    <div class="card w-100 border-0 shadow-sm" style="max-width: 800px;">
+                        <div class="card-body">
+                            <h2 class="mb-4 fw-bold" style="color: #004f63;"><i class="fas fa-pen-to-square me-2"></i> Editar Garantia</h2>
+                            <hr>
+                            <?php if (!empty($erros)): ?>
+                                <div class="alert alert-danger">
+                                    <strong><i class="fas fa-triangle-exclamation me-2"></i>Por favor corrija os seguintes erros:</strong>
+                                    <ul class="mb-0 mt-2">
+                                        <?php foreach ($erros as $erro): ?>
+                                            <li><?= htmlspecialchars($erro) ?></li>
+                                        <?php endforeach; ?>
+                                    </ul>
                                 </div>
-                                <div class="col-md-6">
-                                    <label for="dataInicio" class="form-label fw-semibold">Data de Início <span class="text-danger">*</span></label>
-                                    <input type="date" class="form-control" id="dataInicio" value="2022-03-15" required>
+                            <?php endif; ?>
+                            <?php if (!empty($erro_sistema)): ?>
+                                <div class="alert alert-danger">
+                                    <strong><i class="fas fa-circle-xmark me-2"></i>Erro do sistema:</strong>
+                                    <p class="mb-0 mt-1"><?= htmlspecialchars($erro_sistema) ?></p>
                                 </div>
-                                <div class="col-md-6">
-                                    <label for="dataFim" class="form-label fw-semibold">Data de Fim <span class="text-danger">*</span></label>
-                                    <input type="date" class="form-control" id="dataFim" value="2025-05-28" required>
+                            <?php endif; ?>
+                            <form action="editar.php?id=<?= $id ?>" method="post" novalidate id="formEditar">
+                                <div class="mb-3">
+                                    <label class="form-label fw-semibold">Equipamento Associado</label>
+                                    <input type="text" class="form-control" value="<?= htmlspecialchars(($g->eq_codigo ?? '') . ' — ' . ($g->eq_designacao ?? '')) ?>" disabled>
                                 </div>
-                                <div class="col-md-6">
-                                    <label for="temContrato" class="form-label fw-semibold">Contrato de Manutenção</label>
-                                    <select class="form-select" id="temContrato">
-                                        <option value="sim" selected>Sim</option>
-                                        <option value="nao">Não</option>
-                                    </select>
+                                <div class="row mb-3">
+                                    <div class="col-md-6">
+                                        <label for="data_inicio" class="form-label fw-semibold">Data de Início <span class="text-danger">*</span></label>
+                                        <input type="text" class="form-control" id="data_inicio" name="data_inicio" placeholder="AAAA-MM-DD" value="<?= htmlspecialchars($g->data_inicio ?? '') ?>" required>
+                                    </div>
+                                    <div class="col-md-6">
+                                        <label for="data_fim" class="form-label fw-semibold">Data de Fim <span class="text-danger">*</span></label>
+                                        <input type="text" class="form-control" id="data_fim" name="data_fim" placeholder="AAAA-MM-DD" value="<?= htmlspecialchars($g->data_fim ?? '') ?>" required>
+                                    </div>
                                 </div>
-                                <div class="col-md-6">
-                                    <label for="tipoContrato" class="form-label fw-semibold">Tipo de Contrato</label>
-                                    <select class="form-select" id="tipoContrato">
-                                        <option value="">— Selecionar —</option>
-                                        <option value="anual" selected>Anual</option>
-                                        <option value="plurianual">Plurianual</option>
-                                        <option value="chamada">Por chamada</option>
-                                    </select>
+                                <div class="mb-3">
+                                    <label class="form-label fw-semibold d-block">Existe contrato de manutenção?</label>
+                                    <div class="d-flex gap-4">
+                                        <div class="form-check">
+                                            <input class="form-check-input" type="radio" name="tem_contrato" id="contrato_sim" value="sim" <?= ($tem_contrato_atual === 'sim') ? 'checked' : '' ?>>
+                                            <label class="form-check-label" for="contrato_sim">Sim</label>
+                                        </div>
+                                        <div class="form-check">
+                                            <input class="form-check-input" type="radio" name="tem_contrato" id="contrato_nao" value="nao" <?= ($tem_contrato_atual === 'nao') ? 'checked' : '' ?>>
+                                            <label class="form-check-label" for="contrato_nao">Não</label>
+                                        </div>
+                                    </div>
                                 </div>
-                                <div class="col-md-6">
-                                    <label for="entidade" class="form-label fw-semibold">Entidade Responsável</label>
-                                    <input type="text" class="form-control" id="entidade" value="Philips Healthcare Portugal">
-                                </div>
-                                <div class="col-md-6">
-                                    <label for="numContrato" class="form-label fw-semibold">Nº Contrato</label>
-                                    <input type="text" class="form-control" id="numContrato" value="PHC-2022-4521">
-                                </div>
-                                <div class="col-12">
-                                    <label for="observacoes" class="form-label fw-semibold">Observações</label>
-                                    <textarea class="form-control" id="observacoes" rows="3">Contrato de manutenção anual com visita preventiva incluída. Renovação prevista para Junho 2025.</textarea>
-                                </div>
-                                <div class="col-12 d-flex gap-2 mt-2">
+                                <div class="d-flex justify-content-end gap-2 mt-4">
+                                    <a href="lista.php" class="btn btn-outline-secondary"><i class="fas fa-xmark me-1"></i> Cancelar</a>
                                     <button type="submit" class="btn text-white fw-semibold" style="background-color: #00b8d9;">
-                                        <i class="fas fa-floppy-disk me-1"></i> Guardar alterações
+                                        <i class="fa-regular fa-floppy-disk me-1"></i> Guardar Alterações
                                     </button>
-                                    <a href="detalhes.php" class="btn btn-outline-secondary">
-                                        <i class="fas fa-xmark me-1"></i> Cancelar
-                                    </a>
                                 </div>
-                            </div>
-                        </form>
+                                <div class="alert alert-danger mt-3 d-none" id="erroForm">
+                                    <i class="fas fa-triangle-exclamation me-2"></i> Preencha os campos obrigatórios.
+                                </div>
+                            </form>
+                        </div>
                     </div>
                 </div>
             </main>
         </div>
     </div>
-<script src="../../assets/js/1231236.js"></script>
-    <script>
-        document.getElementById('formEditar').addEventListener('submit', function (e) {
-            e.preventDefault();
-            alert('Garantia atualizada com sucesso.');
-            window.location.href = 'detalhes.php';
+<script>
+    document.getElementById('formEditar').addEventListener('submit', function (e) {
+        const obrigatorios = ['data_inicio', 'data_fim'];
+        let valido = true;
+        obrigatorios.forEach(function (id) {
+            const campo = document.getElementById(id);
+            if (!campo.value.trim()) { campo.classList.add('is-invalid'); valido = false; }
+            else { campo.classList.remove('is-invalid'); }
         });
-    </script>
+        if (!valido) {
+            e.preventDefault();
+            document.getElementById('erroForm').classList.remove('d-none');
+            return;
+        }
+        const inicio = new Date(document.getElementById('data_inicio').value);
+        const fim    = new Date(document.getElementById('data_fim').value);
+        if (fim <= inicio) {
+            e.preventDefault();
+            document.getElementById('data_fim').classList.add('is-invalid');
+            document.getElementById('erroForm').innerHTML = '<i class="fas fa-triangle-exclamation me-2"></i> A data de fim deve ser posterior à data de início.';
+            document.getElementById('erroForm').classList.remove('d-none');
+            return;
+        }
+        document.getElementById('erroForm').classList.add('d-none');
+    });
+</script>
+
+<script>
+    flatpickr("#data_inicio", { dateFormat: "Y-m-d" });
+    flatpickr("#data_fim",    { dateFormat: "Y-m-d" });
+</script>
 
 <?php include '../../includes/footer.php'; ?>

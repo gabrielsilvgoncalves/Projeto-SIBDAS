@@ -1,6 +1,59 @@
-﻿<?php
+<?php
 require_once __DIR__ . '/../../includes/funcoes.php';
 redirect_if_not_logged();
+
+$erros = [];
+$erro_sistema = "";
+
+$id = filter_input(INPUT_GET, 'id', FILTER_VALIDATE_INT);
+if (!$id) { header('Location: lista.php'); exit; }
+
+try {
+    $ligacao = new PDO(
+        "mysql:host=" . MYSQL_HOST . ";dbname=" . MYSQL_DATABASE . ";charset=utf8",
+        MYSQL_USERNAME,
+        MYSQL_PASSWORD
+    );
+    $stmt = $ligacao->prepare("SELECT * FROM localizacoes WHERE id = :id LIMIT 1");
+    $stmt->execute([':id' => $id]);
+    $loc = $stmt->fetch(PDO::FETCH_OBJ);
+    if (!$loc) { header('Location: lista.php'); exit; }
+} catch (PDOException $err) {
+    die("Erro de ligação: " . $err->getMessage());
+}
+
+if ($_SERVER["REQUEST_METHOD"] == "POST") {
+    $edificio = ucwords(strtolower(trim($_POST["edificio"] ?? "")));
+    $piso     = trim($_POST["piso"] ?? "");
+    $servico  = ucwords(strtolower(trim($_POST["servico"] ?? "")));
+    $sala     = trim($_POST["sala"] ?? "");
+
+    if (empty($servico)) $erros[] = "O campo Serviço / Departamento é obrigatório.";
+
+    if (empty($erros)) {
+        try {
+            $sql = "UPDATE localizacoes SET nome = :nome, descricao = :descricao, piso = :piso, ala = :ala, updated_at = NOW() WHERE id = :id";
+            $stmt = $ligacao->prepare($sql);
+            $stmt->execute([
+                ':nome'      => $servico,
+                ':descricao' => $sala,
+                ':piso'      => $piso,
+                ':ala'       => $edificio,
+                ':id'        => $id,
+            ]);
+            header('Location: lista.php');
+            exit;
+        } catch (PDOException $err) {
+            $erro_sistema = "Erro ao gravar os dados: " . $err->getMessage();
+        }
+    }
+    $loc->ala      = $edificio;
+    $loc->piso     = $piso;
+    $loc->nome     = $servico;
+    $loc->descricao = $sala;
+}
+
+$ligacao = null;
 ?>
 <?php include '../../includes/header.php'; ?>
 <?php include '../../includes/nav.php'; ?>
@@ -15,25 +68,41 @@ redirect_if_not_logged();
                         <div class="card-body">
                             <h2 class="mb-4 fw-bold" style="color: #004f63;"><i class="fas fa-pen-to-square me-2"></i> Editar Localização</h2>
                             <hr>
-                            <form action="#" method="post" novalidate id="formEditar">
+                            <?php if (!empty($erros)): ?>
+                                <div class="alert alert-danger">
+                                    <strong><i class="fas fa-triangle-exclamation me-2"></i>Por favor corrija os seguintes erros:</strong>
+                                    <ul class="mb-0 mt-2">
+                                        <?php foreach ($erros as $erro): ?>
+                                            <li><?= htmlspecialchars($erro) ?></li>
+                                        <?php endforeach; ?>
+                                    </ul>
+                                </div>
+                            <?php endif; ?>
+                            <?php if (!empty($erro_sistema)): ?>
+                                <div class="alert alert-danger">
+                                    <strong><i class="fas fa-circle-xmark me-2"></i>Erro do sistema:</strong>
+                                    <p class="mb-0 mt-1"><?= htmlspecialchars($erro_sistema) ?></p>
+                                </div>
+                            <?php endif; ?>
+                            <form action="editar.php?id=<?= $id ?>" method="post" novalidate id="formEditar">
                                 <div class="row mb-3">
                                     <div class="col-md-6">
                                         <label for="edificio" class="form-label fw-semibold">Edifício</label>
-                                        <input type="text" class="form-control" id="edificio" name="edificio" value="Edifício Principal">
+                                        <input type="text" class="form-control" id="edificio" name="edificio" value="<?= htmlspecialchars($loc->ala ?? '') ?>">
                                     </div>
                                     <div class="col-md-6">
                                         <label for="piso" class="form-label fw-semibold">Piso</label>
-                                        <input type="text" class="form-control" id="piso" name="piso" value="Piso 3">
+                                        <input type="text" class="form-control" id="piso" name="piso" value="<?= htmlspecialchars($loc->piso ?? '') ?>">
                                     </div>
                                 </div>
                                 <div class="row mb-3">
                                     <div class="col-md-6">
                                         <label for="servico" class="form-label fw-semibold">Serviço / Departamento <span class="text-danger">*</span></label>
-                                        <input type="text" class="form-control" id="servico" name="servico" value="Unidade de Cuidados Intensivos" required>
+                                        <input type="text" class="form-control" id="servico" name="servico" value="<?= htmlspecialchars($loc->nome ?? '') ?>" required>
                                     </div>
                                     <div class="col-md-6">
                                         <label for="sala" class="form-label fw-semibold">Sala / Gabinete</label>
-                                        <input type="text" class="form-control" id="sala" name="sala" value="Sala UCI-03">
+                                        <input type="text" class="form-control" id="sala" name="sala" value="<?= htmlspecialchars($loc->descricao ?? '') ?>">
                                     </div>
                                 </div>
                                 <div class="d-flex justify-content-end gap-2 mt-4">
@@ -53,17 +122,17 @@ redirect_if_not_logged();
         </div>
     </div>
 <script>
-        document.getElementById('formEditar').addEventListener('submit', function (e) {
+    document.getElementById('formEditar').addEventListener('submit', function (e) {
+        const servico = document.getElementById('servico');
+        if (!servico.value.trim()) {
             e.preventDefault();
-            const servico = document.getElementById('servico');
-            if (!servico.value.trim()) {
-                servico.classList.add('is-invalid');
-                document.getElementById('erroForm').classList.remove('d-none');
-            } else {
-                alert('Localização atualizada com sucesso!');
-                window.location.href = 'lista.php';
-            }
-        });
-    </script>
+            servico.classList.add('is-invalid');
+            document.getElementById('erroForm').classList.remove('d-none');
+        } else {
+            servico.classList.remove('is-invalid');
+            document.getElementById('erroForm').classList.add('d-none');
+        }
+    });
+</script>
 
 <?php include '../../includes/footer.php'; ?>

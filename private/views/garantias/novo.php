@@ -69,11 +69,18 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                 MYSQL_USERNAME,
                 MYSQL_PASSWORD
             );
-            $ligacao->exec("INSERT INTO garantias (id_equipamento, tipo, data_inicio, data_fim, created_at, updated_at)
+            $sql = "INSERT INTO garantias (id_equipamento, tipo, data_inicio, data_fim, created_at, updated_at)
                 VALUES (
-                    (SELECT id FROM equipamentos WHERE codigo = '$codigo_eq' LIMIT 1),
-                    '$tipo_garantia', '$data_inicio', '$data_fim', NOW(), NOW()
-                )");
+                    (SELECT id FROM equipamentos WHERE codigo = :codigo_eq LIMIT 1),
+                    :tipo, :data_inicio, :data_fim, NOW(), NOW()
+                )";
+            $stmt = $ligacao->prepare($sql);
+            $stmt->execute([
+                ':codigo_eq'   => $codigo_eq,
+                ':tipo'        => $tipo_garantia,
+                ':data_inicio' => $data_inicio,
+                ':data_fim'    => $data_fim,
+            ]);
             header('Location: lista.php');
             exit;
         } catch (PDOException $err) {

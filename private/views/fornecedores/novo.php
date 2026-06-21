@@ -70,8 +70,17 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                 MYSQL_USERNAME,
                 MYSQL_PASSWORD
             );
-            $ligacao->exec("INSERT INTO fornecedores (nome, nif, email, telefone, morada, website, created_at, updated_at)
-                VALUES ('$nome', '$nif', '$email', '$telefone', '$morada', '$website', NOW(), NOW())");
+            $sql = "INSERT INTO fornecedores (nome, nif, email, telefone, morada, website, created_at, updated_at)
+                VALUES (:nome, :nif, :email, :telefone, :morada, :website, NOW(), NOW())";
+            $stmt = $ligacao->prepare($sql);
+            $stmt->execute([
+                ':nome'     => $nome,
+                ':nif'      => $nif,
+                ':email'    => $email,
+                ':telefone' => $telefone,
+                ':morada'   => $morada,
+                ':website'  => $website,
+            ]);
             header('Location: lista.php');
             exit;
         } catch (PDOException $err) {
