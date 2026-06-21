@@ -50,6 +50,16 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     if (empty($modelo))      $erros[] = "O campo Modelo é obrigatório.";
     if (empty($num_serie))   $erros[] = "O campo Número de Série é obrigatório.";
     if (empty($servico))     $erros[] = "O campo Serviço / Departamento é obrigatório.";
+    if (!empty($data_aquisicao)) {
+        if (!preg_match('/^\d{4}-\d{2}-\d{2}$/', $data_aquisicao)) {
+            $erros[] = "Formato de data de aquisição inválido. Use AAAA-MM-DD.";
+        } else {
+            $partes = explode('-', $data_aquisicao);
+            if (!checkdate((int)$partes[1], (int)$partes[2], (int)$partes[0])) {
+                $erros[] = "Data de aquisição inválida.";
+            }
+        }
+    }
 
     // 4. Depuração: mostrar erros recolhidos
     /*
@@ -177,7 +187,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                                 </div>
                                 <div class="col-md-4">
                                     <label for="data_aquisicao" class="form-label fw-semibold">Data de Aquisição</label>
-                                    <input type="date" class="form-control" id="data_aquisicao" name="data_aquisicao">
+                                    <input type="text" class="form-control" id="data_aquisicao" name="data_aquisicao" placeholder="AAAA-MM-DD" value="<?= htmlspecialchars($_POST['data_aquisicao'] ?? '') ?>">
                                 </div>
                             </div>
                             <div class="row mb-3">
@@ -271,6 +281,10 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
             document.getElementById('erroForm').classList.add('d-none');
         }
     });
+</script>
+
+<script>
+    flatpickr("#data_aquisicao", { dateFormat: "Y-m-d" });
 </script>
 
 <?php include '../../includes/footer.php'; ?>

@@ -18,11 +18,27 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 
     // 3. Validar
     if (empty($equipamento)) $erros[] = "O campo Equipamento é obrigatório.";
-    if (empty($data_inicio)) $erros[] = "A Data de Início é obrigatória.";
+    if (empty($data_inicio)) {
+        $erros[] = "A Data de Início é obrigatória.";
+    } elseif (!preg_match('/^\d{4}-\d{2}-\d{2}$/', $data_inicio)) {
+        $erros[] = "Formato de data de início inválido. Use AAAA-MM-DD.";
+    } else {
+        $partes = explode('-', $data_inicio);
+        if (!checkdate((int)$partes[1], (int)$partes[2], (int)$partes[0])) {
+            $erros[] = "Data de início inválida.";
+        }
+    }
     if (empty($data_fim)) {
         $erros[] = "A Data de Fim é obrigatória.";
-    } elseif (!empty($data_inicio) && $data_fim <= $data_inicio) {
-        $erros[] = "A Data de Fim deve ser posterior à Data de Início.";
+    } elseif (!preg_match('/^\d{4}-\d{2}-\d{2}$/', $data_fim)) {
+        $erros[] = "Formato de data de fim inválido. Use AAAA-MM-DD.";
+    } else {
+        $partes = explode('-', $data_fim);
+        if (!checkdate((int)$partes[1], (int)$partes[2], (int)$partes[0])) {
+            $erros[] = "Data de fim inválida.";
+        } elseif (!empty($data_inicio) && $data_fim <= $data_inicio) {
+            $erros[] = "A Data de Fim deve ser posterior à Data de Início.";
+        }
     }
 
     // 4. Depuração: mostrar erros recolhidos
@@ -95,11 +111,11 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                                 <div class="row mb-3">
                                     <div class="col-md-6">
                                         <label for="data_inicio" class="form-label fw-semibold">Data de Início <span class="text-danger">*</span></label>
-                                        <input type="date" class="form-control" id="data_inicio" name="data_inicio" required>
+                                        <input type="text" class="form-control" id="data_inicio" name="data_inicio" placeholder="AAAA-MM-DD" value="<?= htmlspecialchars($_POST['data_inicio'] ?? '') ?>" required>
                                     </div>
                                     <div class="col-md-6">
                                         <label for="data_fim" class="form-label fw-semibold">Data de Fim <span class="text-danger">*</span></label>
-                                        <input type="date" class="form-control" id="data_fim" name="data_fim" required>
+                                        <input type="text" class="form-control" id="data_fim" name="data_fim" placeholder="AAAA-MM-DD" value="<?= htmlspecialchars($_POST['data_fim'] ?? '') ?>" required>
                                     </div>
                                 </div>
 
@@ -222,5 +238,10 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
             document.getElementById('erroForm').classList.add('d-none');
         });
     </script>
+
+<script>
+    flatpickr("#data_inicio", { dateFormat: "Y-m-d" });
+    flatpickr("#data_fim",    { dateFormat: "Y-m-d" });
+</script>
 
 <?php include '../../includes/footer.php'; ?>

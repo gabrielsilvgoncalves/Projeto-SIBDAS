@@ -22,6 +22,19 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     if (empty($tipo))        $erros[] = "O campo Tipo de Documento é obrigatório.";
     if (empty($nome_doc))    $erros[] = "O campo Nome do Documento é obrigatório.";
     if (empty($equipamento)) $erros[] = "O campo Equipamento Associado é obrigatório.";
+    foreach (['data_doc' => 'Data do Documento', 'data_validade' => 'Data de Validade'] as $campo => $label) {
+        $val = $$campo;
+        if (!empty($val)) {
+            if (!preg_match('/^\d{4}-\d{2}-\d{2}$/', $val)) {
+                $erros[] = "Formato de $label inválido. Use AAAA-MM-DD.";
+            } else {
+                $partes = explode('-', $val);
+                if (!checkdate((int)$partes[1], (int)$partes[2], (int)$partes[0])) {
+                    $erros[] = "$label inválida.";
+                }
+            }
+        }
+    }
 
     // 4. Depuração: mostrar erros recolhidos
     /*
@@ -108,11 +121,11 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                                 <div class="row mb-3">
                                     <div class="col-md-4">
                                         <label for="data_doc" class="form-label fw-semibold">Data do Documento</label>
-                                        <input type="date" class="form-control" id="data_doc" name="data_doc">
+                                        <input type="text" class="form-control" id="data_doc" name="data_doc" placeholder="AAAA-MM-DD" value="<?= htmlspecialchars($_POST['data_doc'] ?? '') ?>">
                                     </div>
                                     <div class="col-md-4">
                                         <label for="data_validade" class="form-label fw-semibold">Data de Validade</label>
-                                        <input type="date" class="form-control" id="data_validade" name="data_validade">
+                                        <input type="text" class="form-control" id="data_validade" name="data_validade" placeholder="AAAA-MM-DD" value="<?= htmlspecialchars($_POST['data_validade'] ?? '') ?>">
                                     </div>
                                 </div>
 
@@ -175,5 +188,10 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
             }
         });
     </script>
+
+<script>
+    flatpickr("#data_doc",      { dateFormat: "Y-m-d" });
+    flatpickr("#data_validade", { dateFormat: "Y-m-d" });
+</script>
 
 <?php include '../../includes/footer.php'; ?>
