@@ -3,6 +3,7 @@ require_once __DIR__ . '/../../includes/funcoes.php';
 redirect_if_not_logged();
 
 $erros = [];
+$erro_sistema = "";
 
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
     // 1. Recolher dados
@@ -82,6 +83,25 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     echo "<li>Serviço: $servico</li>";
     echo "</ul>";
     */
+
+    // 6. Gravar na base de dados
+    if (empty($erros)) {
+        $data_aq_sql = !empty($data_aquisicao) ? "'$data_aquisicao'" : "NULL";
+        try {
+            $ligacao = new PDO(
+                "mysql:host=" . MYSQL_HOST . ";dbname=" . MYSQL_DATABASE . ";charset=utf8",
+                MYSQL_USERNAME,
+                MYSQL_PASSWORD
+            );
+            $ligacao->exec("INSERT INTO equipamentos (codigo, designacao, marca, modelo, numero_serie, categoria, estado, criticidade, data_aquisicao, created_at, updated_at)
+                VALUES ('$codigo', '$designacao', '$marca', '$modelo', '$num_serie', '$categoria', '$estado', '$criticidade', $data_aq_sql, NOW(), NOW())");
+            header('Location: lista.php');
+            exit;
+        } catch (PDOException $err) {
+            $erro_sistema = "Erro ao gravar os dados: " . $err->getMessage();
+        }
+        $ligacao = null;
+    }
 }
 ?>
 <?php include '../../includes/header.php'; ?>
@@ -108,6 +128,12 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                                         <li><?= htmlspecialchars($erro) ?></li>
                                     <?php endforeach; ?>
                                 </ul>
+                            </div>
+                        <?php endif; ?>
+                        <?php if (!empty($erro_sistema)): ?>
+                            <div class="alert alert-danger">
+                                <strong><i class="fas fa-circle-xmark me-2"></i>Erro do sistema:</strong>
+                                <p class="mb-0 mt-1"><?= htmlspecialchars($erro_sistema) ?></p>
                             </div>
                         <?php endif; ?>
                         <form action="#" method="post" novalidate id="formEquipamento">

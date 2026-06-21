@@ -3,6 +3,7 @@ require_once __DIR__ . '/../../includes/funcoes.php';
 redirect_if_not_logged();
 
 $erros = [];
+$erro_sistema = "";
 
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
     // 1. Recolher dados
@@ -31,6 +32,8 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                 $partes = explode('-', $val);
                 if (!checkdate((int)$partes[1], (int)$partes[2], (int)$partes[0])) {
                     $erros[] = "$label inválida.";
+                } elseif ($campo === 'data_validade' && $val < date('Y-m-d')) {
+                    $erros[] = "A Data de Validade não pode ser anterior à data atual.";
                 }
             }
         }
@@ -50,6 +53,39 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     echo "<li>Nome do Documento: $nome_doc</li>";
     echo "</ul>";
     */
+
+    // 6. Gravar na base de dados
+    if (empty($erros)) {
+        $tiposMap = [
+            'Manual de utilizador'       => 'Manual',
+            'Manual de serviço'          => 'Manual',
+            'Certificado de calibração'  => 'Certificado de calibração',
+            'Contrato de manutenção'     => 'Contrato',
+            'Fatura / Guia de aquisição' => 'Outro',
+            'Declaração de conformidade' => 'Outro',
+            'Relatório técnico'          => 'Relatório técnico',
+        ];
+        $tipo_db     = $tiposMap[$tipo] ?? 'Outro';
+        $codigo_eq   = trim(explode('—', $equipamento)[0]);
+        $data_doc_sql = !empty($data_doc) ? "'$data_doc'" : "NULL";
+        try {
+            $ligacao = new PDO(
+                "mysql:host=" . MYSQL_HOST . ";dbname=" . MYSQL_DATABASE . ";charset=utf8",
+                MYSQL_USERNAME,
+                MYSQL_PASSWORD
+            );
+            $ligacao->exec("INSERT INTO documentos (id_equipamento, tipo, titulo, data_documento, created_at, updated_at)
+                VALUES (
+                    (SELECT id FROM equipamentos WHERE codigo = '$codigo_eq' LIMIT 1),
+                    '$tipo_db', '$nome_doc', $data_doc_sql, NOW(), NOW()
+                )");
+            header('Location: lista.php');
+            exit;
+        } catch (PDOException $err) {
+            $erro_sistema = "Erro ao gravar os dados: " . $err->getMessage();
+        }
+        $ligacao = null;
+    }
 }
 ?>
 <?php include '../../includes/header.php'; ?>
@@ -73,6 +109,12 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                                             <li><?= htmlspecialchars($erro) ?></li>
                                         <?php endforeach; ?>
                                     </ul>
+                                </div>
+                            <?php endif; ?>
+                            <?php if (!empty($erro_sistema)): ?>
+                                <div class="alert alert-danger">
+                                    <strong><i class="fas fa-circle-xmark me-2"></i>Erro do sistema:</strong>
+                                    <p class="mb-0 mt-1"><?= htmlspecialchars($erro_sistema) ?></p>
                                 </div>
                             <?php endif; ?>
                             <form action="#" method="post" novalidate id="formDocumento" enctype="multipart/form-data">
@@ -191,7 +233,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 
 <script>
     flatpickr("#data_doc",      { dateFormat: "Y-m-d" });
-    flatpickr("#data_validade", { dateFormat: "Y-m-d" });
+    flatpickr("#data_validade", { dateFormat: "Y-m-d", minDate: "today" });
 </script>
 
 <?php include '../../includes/footer.php'; ?>
