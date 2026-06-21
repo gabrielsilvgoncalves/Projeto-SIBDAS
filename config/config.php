@@ -9,3 +9,10 @@ define('MYSQL_DATABASE', 'medstock');
 define('MYSQL_USERNAME', 'sibdas2025');
 define('MYSQL_PASSWORD', '3LduNkJe55lVk0ia0RXvVQ1tZpA7OW5');
 define('MYSQL_AES_KEY', 'Vduu47qL51hLn6bkYkY6NlO1nivsmdfD');
+
+// --------------------------------------------------------------------
+// Segurança – Encriptação com OpenSSL
+// --------------------------------------------------------------------
+define('OPENSSL_METHOD', 'AES-256-CBC');
+define('OPENSSL_KEY',    'H0SDRQzIGqclX2kbYBk9xspdn9U5f3Wa');
+define('OPENSSL_IV',     'BzKAbjuREsHgnw56');

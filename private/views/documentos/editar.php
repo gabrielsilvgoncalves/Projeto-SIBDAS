@@ -2,11 +2,18 @@
 require_once __DIR__ . '/../../includes/funcoes.php';
 redirect_if_not_logged();
 
+if (!in_array($_SERVER['REQUEST_METHOD'], ['GET', 'POST'])) {
+    header('Location: ' . BASE_URL . '/public/login.php');
+    exit;
+}
+
 $erros = [];
 $erro_sistema = "";
 
-$id = filter_input(INPUT_GET, 'id', FILTER_VALIDATE_INT);
-if (!$id) { header('Location: lista.php'); exit; }
+$idEncrypted = $_GET['id'] ?? null;
+$id = aes_decrypt($idEncrypted);
+if (!$id || !is_numeric($id)) { header('Location: lista.php'); exit; }
+$id = (int) $id;
 
 try {
     $ligacao = new PDO(
@@ -14,6 +21,7 @@ try {
         MYSQL_USERNAME,
         MYSQL_PASSWORD
     );
+    $ligacao->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
     $stmt = $ligacao->prepare(
         "SELECT d.*, e.codigo AS eq_codigo, e.designacao AS eq_designacao
          FROM documentos d
@@ -116,7 +124,7 @@ $tipo_form = $tiposReverso[$doc->tipo] ?? '';
                                     <p class="mb-0 mt-1"><?= htmlspecialchars($erro_sistema) ?></p>
                                 </div>
                             <?php endif; ?>
-                            <form action="editar.php?id=<?= $id ?>" method="post" novalidate id="formEditar">
+                            <form action="editar.php?id=<?= aes_encrypt($id) ?>" method="post" novalidate id="formEditar">
                                 <div class="row mb-3">
                                     <div class="col-md-6">
                                         <label for="tipo" class="form-label fw-semibold">Tipo de Documento <span class="text-danger">*</span></label>

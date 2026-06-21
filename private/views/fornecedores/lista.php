@@ -97,7 +97,7 @@ $ligacao = null;
                                     <td><?= htmlspecialchars($f->cidade ?? '—') ?></td>
                                     <td class="text-center">
                                         <a href="detalhes.php?id=<?= $f->id ?>" class="btn btn-sm btn-outline-primary me-1" title="Ver"><i class="fas fa-eye"></i></a>
-                                        <a href="editar.php?id=<?= $f->id ?>" class="btn btn-sm btn-outline-warning me-1" title="Editar"><i class="fas fa-pen-to-square"></i></a>
+                                        <a href="editar.php?id=<?= aes_encrypt($f->id) ?>" class="btn btn-sm btn-outline-warning me-1" title="Editar"><i class="fas fa-pen-to-square"></i></a>
                                         <a href="apagar.php?id=<?= $f->id ?>" class="btn btn-sm btn-outline-danger" title="Remover"><i class="fas fa-trash-can"></i></a>
                                     </td>
                                 </tr>

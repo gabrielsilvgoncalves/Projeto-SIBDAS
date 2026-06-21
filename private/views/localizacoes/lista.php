@@ -60,7 +60,7 @@ $ligacao = null;
                                     <td><?= htmlspecialchars($l->descricao ?? '—') ?></td>
                                     <td class="text-center"><?= $l->total_equipamentos ?></td>
                                     <td class="text-center">
-                                        <a href="editar.php?id=<?= $l->id ?>" class="btn btn-sm btn-outline-warning me-1"><i class="fas fa-pen-to-square"></i></a>
+                                        <a href="editar.php?id=<?= aes_encrypt($l->id) ?>" class="btn btn-sm btn-outline-warning me-1"><i class="fas fa-pen-to-square"></i></a>
                                         <a href="apagar.php?id=<?= $l->id ?>" class="btn btn-sm btn-outline-danger"><i class="fas fa-trash-can"></i></a>
                                     </td>
                                 </tr>

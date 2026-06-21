@@ -128,7 +128,7 @@ $em30dias = date('Y-m-d', strtotime('+30 days'));
                                     <td><?= $estadoBadge ?></td>
                                     <td class="text-center">
                                         <a href="detalhes.php?id=<?= $g->id ?>" class="btn btn-sm btn-outline-info me-1"><i class="fas fa-eye"></i></a>
-                                        <a href="editar.php?id=<?= $g->id ?>" class="btn btn-sm btn-outline-warning me-1"><i class="fas fa-pen-to-square"></i></a>
+                                        <a href="editar.php?id=<?= aes_encrypt($g->id) ?>" class="btn btn-sm btn-outline-warning me-1"><i class="fas fa-pen-to-square"></i></a>
                                         <a href="apagar.php?id=<?= $g->id ?>" class="btn btn-sm btn-outline-danger"><i class="fas fa-trash-can"></i></a>
                                     </td>
                                 </tr>
