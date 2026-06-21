@@ -1,6 +1,43 @@
 ﻿<?php
 require_once __DIR__ . '/../../includes/funcoes.php';
 redirect_if_not_logged();
+
+$erros = [];
+
+if ($_SERVER["REQUEST_METHOD"] == "POST") {
+    // 1. Recolher dados
+    $tipo           = $_POST["tipo"] ?? "";
+    $nome_doc       = $_POST["nome_doc"] ?? "";
+    $equipamento    = $_POST["equipamento"] ?? "";
+    $fornecedor_doc = $_POST["fornecedor_doc"] ?? "";
+    $data_doc       = $_POST["data_doc"] ?? "";
+    $data_validade  = $_POST["data_validade"] ?? "";
+    $modo_doc       = $_POST["modo_doc"] ?? "";
+    $link_doc       = $_POST["link_doc"] ?? "";
+
+    // 2. Trim
+    $nome_doc = trim($nome_doc);
+
+    // 3. Validar
+    if (empty($tipo))        $erros[] = "O campo Tipo de Documento é obrigatório.";
+    if (empty($nome_doc))    $erros[] = "O campo Nome do Documento é obrigatório.";
+    if (empty($equipamento)) $erros[] = "O campo Equipamento Associado é obrigatório.";
+
+    // 4. Depuração: mostrar erros recolhidos
+    /*
+    echo "<pre>"; print_r($erros); echo "</pre>";
+    */
+
+    // 5. Normalizar entrada
+    $nome_doc = ucwords(strtolower($nome_doc));
+
+    /*
+    echo "<p><strong>Dados normalizados:</strong></p>";
+    echo "<ul>";
+    echo "<li>Nome do Documento: $nome_doc</li>";
+    echo "</ul>";
+    */
+}
 ?>
 <?php include '../../includes/header.php'; ?>
 <?php include '../../includes/nav.php'; ?>
@@ -15,6 +52,16 @@ redirect_if_not_logged();
                         <div class="card-body">
                             <h2 class="mb-4 fw-bold" style="color: #004f63;"><i class="fas fa-plus me-2"></i> Associar Documento</h2>
                             <hr>
+                            <?php if (!empty($erros)): ?>
+                                <div class="alert alert-danger">
+                                    <strong><i class="fas fa-triangle-exclamation me-2"></i>Por favor corrija os seguintes erros:</strong>
+                                    <ul class="mb-0 mt-2">
+                                        <?php foreach ($erros as $erro): ?>
+                                            <li><?= htmlspecialchars($erro) ?></li>
+                                        <?php endforeach; ?>
+                                    </ul>
+                                </div>
+                            <?php endif; ?>
                             <form action="#" method="post" novalidate id="formDocumento" enctype="multipart/form-data">
                                 <div class="row mb-3">
                                     <div class="col-md-6">
@@ -32,7 +79,7 @@ redirect_if_not_logged();
                                     </div>
                                     <div class="col-md-6">
                                         <label for="nome_doc" class="form-label fw-semibold">Nome do Documento <span class="text-danger">*</span></label>
-                                        <input type="text" class="form-control" id="nome_doc" name="nome_doc" placeholder="ex: Manual Utilizador IntelliVue MP5" required>
+                                        <input type="text" class="form-control" id="nome_doc" name="nome_doc" placeholder="ex: Manual Utilizador IntelliVue MP5" value="<?= htmlspecialchars($_POST['nome_doc'] ?? '') ?>" required>
                                     </div>
                                 </div>
                                 <div class="row mb-3">
@@ -113,7 +160,6 @@ redirect_if_not_logged();
             document.getElementById('campoLink').classList.toggle('d-none', isUpload);
         }
         document.getElementById('formDocumento').addEventListener('submit', function (e) {
-            e.preventDefault();
             const obrigatorios = ['tipo', 'nome_doc', 'equipamento'];
             let valido = true;
             obrigatorios.forEach(function (id) {
@@ -122,10 +168,10 @@ redirect_if_not_logged();
                 else { campo.classList.remove('is-invalid'); }
             });
             if (!valido) {
+                e.preventDefault();
                 document.getElementById('erroForm').classList.remove('d-none');
             } else {
-                alert('Documento associado com sucesso!');
-                window.location.href = 'lista.php';
+                document.getElementById('erroForm').classList.add('d-none');
             }
         });
     </script>

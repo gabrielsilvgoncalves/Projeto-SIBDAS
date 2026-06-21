@@ -1,6 +1,39 @@
 ﻿<?php
 require_once __DIR__ . '/../../includes/funcoes.php';
 redirect_if_not_logged();
+
+$erros = [];
+
+if ($_SERVER["REQUEST_METHOD"] == "POST") {
+    // 1. Recolher dados
+    $edificio = $_POST["edificio"] ?? "";
+    $piso     = $_POST["piso"] ?? "";
+    $servico  = $_POST["servico"] ?? "";
+    $sala     = $_POST["sala"] ?? "";
+
+    // 2. Trim
+    $servico = trim($servico);
+
+    // 3. Validar
+    if (empty($servico)) $erros[] = "O campo Serviço / Departamento é obrigatório.";
+
+    // 4. Depuração: mostrar erros recolhidos
+    /*
+    echo "<pre>"; print_r($erros); echo "</pre>";
+    */
+
+    // 5. Normalizar entrada
+    $servico  = ucwords(strtolower($servico));
+    $edificio = ucwords(strtolower($edificio));
+
+    /*
+    echo "<p><strong>Dados normalizados:</strong></p>";
+    echo "<ul>";
+    echo "<li>Edifício: $edificio</li>";
+    echo "<li>Serviço: $servico</li>";
+    echo "</ul>";
+    */
+}
 ?>
 <?php include '../../includes/header.php'; ?>
 <?php include '../../includes/nav.php'; ?>
@@ -15,25 +48,35 @@ redirect_if_not_logged();
                         <div class="card-body">
                             <h2 class="mb-4 fw-bold" style="color: #004f63;"><i class="fas fa-plus me-2"></i> Nova Localização</h2>
                             <hr>
+                            <?php if (!empty($erros)): ?>
+                                <div class="alert alert-danger">
+                                    <strong><i class="fas fa-triangle-exclamation me-2"></i>Por favor corrija os seguintes erros:</strong>
+                                    <ul class="mb-0 mt-2">
+                                        <?php foreach ($erros as $erro): ?>
+                                            <li><?= htmlspecialchars($erro) ?></li>
+                                        <?php endforeach; ?>
+                                    </ul>
+                                </div>
+                            <?php endif; ?>
                             <form action="#" method="post" novalidate id="formLocalizacao">
                                 <div class="row mb-3">
                                     <div class="col-md-6">
                                         <label for="edificio" class="form-label fw-semibold">Edifício</label>
-                                        <input type="text" class="form-control" id="edificio" name="edificio" placeholder="ex: Edifício Principal">
+                                        <input type="text" class="form-control" id="edificio" name="edificio" placeholder="ex: Edifício Principal" value="<?= htmlspecialchars($_POST['edificio'] ?? '') ?>">
                                     </div>
                                     <div class="col-md-6">
                                         <label for="piso" class="form-label fw-semibold">Piso</label>
-                                        <input type="text" class="form-control" id="piso" name="piso" placeholder="ex: Piso 2">
+                                        <input type="text" class="form-control" id="piso" name="piso" placeholder="ex: Piso 2" value="<?= htmlspecialchars($_POST['piso'] ?? '') ?>">
                                     </div>
                                 </div>
                                 <div class="row mb-3">
                                     <div class="col-md-6">
                                         <label for="servico" class="form-label fw-semibold">Serviço / Departamento <span class="text-danger">*</span></label>
-                                        <input type="text" class="form-control" id="servico" name="servico" placeholder="ex: Urgência Geral" required>
+                                        <input type="text" class="form-control" id="servico" name="servico" placeholder="ex: Urgência Geral" value="<?= htmlspecialchars($_POST['servico'] ?? '') ?>" required>
                                     </div>
                                     <div class="col-md-6">
                                         <label for="sala" class="form-label fw-semibold">Sala / Gabinete</label>
-                                        <input type="text" class="form-control" id="sala" name="sala" placeholder="ex: Sala 203">
+                                        <input type="text" class="form-control" id="sala" name="sala" placeholder="ex: Sala 203" value="<?= htmlspecialchars($_POST['sala'] ?? '') ?>">
                                     </div>
                                 </div>
                                 <div class="d-flex justify-content-end gap-2 mt-4">
@@ -54,14 +97,14 @@ redirect_if_not_logged();
     </div>
 <script>
         document.getElementById('formLocalizacao').addEventListener('submit', function (e) {
-            e.preventDefault();
             const servico = document.getElementById('servico');
             if (!servico.value.trim()) {
+                e.preventDefault();
                 servico.classList.add('is-invalid');
                 document.getElementById('erroForm').classList.remove('d-none');
             } else {
-                alert('Localização guardada com sucesso!');
-                window.location.href = 'lista.php';
+                servico.classList.remove('is-invalid');
+                document.getElementById('erroForm').classList.add('d-none');
             }
         });
     </script>

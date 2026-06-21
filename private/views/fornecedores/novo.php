@@ -1,6 +1,66 @@
 ﻿<?php
 require_once __DIR__ . '/../../includes/funcoes.php';
 redirect_if_not_logged();
+
+$erros = [];
+
+if ($_SERVER["REQUEST_METHOD"] == "POST") {
+    // 1. Recolher dados
+    $nome            = $_POST["nome"] ?? "";
+    $nif             = $_POST["nif"] ?? "";
+    $tipo            = $_POST["tipo"] ?? "";
+    $morada          = $_POST["morada"] ?? "";
+    $telefone        = $_POST["telefone"] ?? "";
+    $email           = $_POST["email"] ?? "";
+    $website         = $_POST["website"] ?? "";
+    $pessoa_contacto = $_POST["pessoa_contacto"] ?? "";
+    $tel_contacto    = $_POST["tel_contacto"] ?? "";
+    $observacoes     = $_POST["observacoes"] ?? "";
+
+    // 2. Trim
+    $nome     = trim($nome);
+    $nif      = trim($nif);
+    $telefone = trim($telefone);
+    $email    = trim($email);
+
+    // 3. Validar
+    if (empty($nome)) {
+        $erros[] = "O campo Nome é obrigatório.";
+    } elseif (preg_match('/\d/', $nome)) {
+        $erros[] = "O campo Nome não pode conter números.";
+    }
+    if (empty($nif)) {
+        $erros[] = "O campo NIF é obrigatório.";
+    } elseif (!preg_match('/^\d{9}$/', $nif)) {
+        $erros[] = "O NIF deve ter exatamente 9 dígitos numéricos.";
+    }
+    if (empty($tipo)) $erros[] = "O campo Tipo de Fornecedor é obrigatório.";
+    if (!empty($telefone) && !preg_match('/^9\d{8}$/', $telefone)) {
+        $erros[] = "O número de telefone não é válido. Deve começar por 9 e ter 9 dígitos.";
+    }
+    if (!empty($email) && !filter_var($email, FILTER_VALIDATE_EMAIL)) {
+        $erros[] = "O endereço de email não é válido.";
+    }
+
+    // 4. Depuração: mostrar erros recolhidos
+    /*
+    echo "<pre>"; print_r($erros); echo "</pre>";
+    */
+
+    // 5. Normalizar entrada
+    $nome            = ucwords(strtolower($nome));
+    $email           = strtolower($email);
+    $pessoa_contacto = ucwords(strtolower($pessoa_contacto));
+
+    /*
+    echo "<p><strong>Dados normalizados:</strong></p>";
+    echo "<ul>";
+    echo "<li>Nome: $nome</li>";
+    echo "<li>Email: $email</li>";
+    echo "<li>Pessoa de Contacto: $pessoa_contacto</li>";
+    echo "</ul>";
+    */
+}
 ?>
 <?php include '../../includes/header.php'; ?>
 <?php include '../../includes/nav.php'; ?>
@@ -18,17 +78,27 @@ redirect_if_not_logged();
                                 <i class="fas fa-plus me-2"></i> Inserir Novo Fornecedor
                             </h2>
                             <hr>
+                            <?php if (!empty($erros)): ?>
+                                <div class="alert alert-danger">
+                                    <strong><i class="fas fa-triangle-exclamation me-2"></i>Por favor corrija os seguintes erros:</strong>
+                                    <ul class="mb-0 mt-2">
+                                        <?php foreach ($erros as $erro): ?>
+                                            <li><?= htmlspecialchars($erro) ?></li>
+                                        <?php endforeach; ?>
+                                    </ul>
+                                </div>
+                            <?php endif; ?>
                             <form action="#" method="post" novalidate id="formFornecedor">
 
                                 <h5 class="fw-bold mb-3 mt-4" style="color: #007fa3;"><i class="fas fa-building me-2"></i> Dados da Empresa</h5>
                                 <div class="row mb-3">
                                     <div class="col-md-8">
                                         <label for="nome" class="form-label fw-semibold">Nome da Empresa <span class="text-danger">*</span></label>
-                                        <input type="text" class="form-control" id="nome" name="nome" placeholder="Nome completo da empresa" required>
+                                        <input type="text" class="form-control" id="nome" name="nome" placeholder="Nome completo da empresa" value="<?= htmlspecialchars($_POST['nome'] ?? '') ?>" required>
                                     </div>
                                     <div class="col-md-4">
                                         <label for="nif" class="form-label fw-semibold">NIF <span class="text-danger">*</span></label>
-                                        <input type="text" class="form-control" id="nif" name="nif" placeholder="ex: 500 123 456" required>
+                                        <input type="text" class="form-control" id="nif" name="nif" placeholder="ex: 500123456" value="<?= htmlspecialchars($_POST['nif'] ?? '') ?>" required>
                                     </div>
                                 </div>
                                 <div class="row mb-3">
@@ -44,7 +114,7 @@ redirect_if_not_logged();
                                     </div>
                                     <div class="col-md-8">
                                         <label for="morada" class="form-label fw-semibold">Morada</label>
-                                        <input type="text" class="form-control" id="morada" name="morada" placeholder="Rua, nº porta, código-postal, cidade">
+                                        <input type="text" class="form-control" id="morada" name="morada" placeholder="Rua, nº porta, código-postal, cidade" value="<?= htmlspecialchars($_POST['morada'] ?? '') ?>">
                                     </div>
                                 </div>
 
@@ -52,11 +122,11 @@ redirect_if_not_logged();
                                 <div class="row mb-3">
                                     <div class="col-md-4">
                                         <label for="telefone" class="form-label fw-semibold">Telefone</label>
-                                        <input type="tel" class="form-control" id="telefone" name="telefone" placeholder="+351 21 xxx xxxx">
+                                        <input type="tel" class="form-control" id="telefone" name="telefone" placeholder="9XXXXXXXX" value="<?= htmlspecialchars($_POST['telefone'] ?? '') ?>">
                                     </div>
                                     <div class="col-md-4">
                                         <label for="email" class="form-label fw-semibold">Email</label>
-                                        <input type="email" class="form-control" id="email" name="email" placeholder="email@empresa.pt">
+                                        <input type="email" class="form-control" id="email" name="email" placeholder="email@empresa.pt" value="<?= htmlspecialchars($_POST['email'] ?? '') ?>">
                                     </div>
                                     <div class="col-md-4">
                                         <label for="website" class="form-label fw-semibold">Website</label>
@@ -68,7 +138,7 @@ redirect_if_not_logged();
                                 <div class="row mb-3">
                                     <div class="col-md-6">
                                         <label for="pessoa_contacto" class="form-label fw-semibold">Nome</label>
-                                        <input type="text" class="form-control" id="pessoa_contacto" name="pessoa_contacto" placeholder="Nome do responsável">
+                                        <input type="text" class="form-control" id="pessoa_contacto" name="pessoa_contacto" placeholder="Nome do responsável" value="<?= htmlspecialchars($_POST['pessoa_contacto'] ?? '') ?>">
                                     </div>
                                     <div class="col-md-6">
                                         <label for="tel_contacto" class="form-label fw-semibold">Telefone Direto</label>
@@ -79,7 +149,7 @@ redirect_if_not_logged();
                                 <h5 class="fw-bold mb-3 mt-4" style="color: #007fa3;"><i class="fas fa-note-sticky me-2"></i> Observações</h5>
                                 <div class="mb-4">
                                     <textarea class="form-control" id="observacoes" name="observacoes" rows="3"
-                                        placeholder="Informações adicionais sobre o fornecedor..."></textarea>
+                                        placeholder="Informações adicionais sobre o fornecedor..."><?= htmlspecialchars($_POST['observacoes'] ?? '') ?></textarea>
                                 </div>
 
                                 <div class="d-flex justify-content-end gap-2">
@@ -103,7 +173,6 @@ redirect_if_not_logged();
     </div>
 <script>
         document.getElementById('formFornecedor').addEventListener('submit', function (e) {
-            e.preventDefault();
             const obrigatorios = ['nome', 'nif', 'tipo'];
             let valido = true;
             obrigatorios.forEach(function (id) {
@@ -112,10 +181,10 @@ redirect_if_not_logged();
                 else { campo.classList.remove('is-invalid'); }
             });
             if (!valido) {
+                e.preventDefault();
                 document.getElementById('erroForm').classList.remove('d-none');
             } else {
-                alert('Fornecedor guardado com sucesso!');
-                window.location.href = 'lista.php';
+                document.getElementById('erroForm').classList.add('d-none');
             }
         });
     </script>

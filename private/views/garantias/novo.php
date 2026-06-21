@@ -1,6 +1,47 @@
 ﻿<?php
 require_once __DIR__ . '/../../includes/funcoes.php';
 redirect_if_not_logged();
+
+$erros = [];
+
+if ($_SERVER["REQUEST_METHOD"] == "POST") {
+    // 1. Recolher dados
+    $equipamento   = $_POST["equipamento"] ?? "";
+    $data_inicio   = $_POST["data_inicio"] ?? "";
+    $data_fim      = $_POST["data_fim"] ?? "";
+    $tem_contrato  = $_POST["tem_contrato"] ?? "";
+    $tipo_contrato = $_POST["tipo_contrato"] ?? "";
+    $periodicidade = $_POST["periodicidade"] ?? "";
+    $entidade      = $_POST["entidade"] ?? "";
+    $num_contrato  = $_POST["num_contrato"] ?? "";
+    $observacoes   = $_POST["observacoes"] ?? "";
+
+    // 3. Validar
+    if (empty($equipamento)) $erros[] = "O campo Equipamento é obrigatório.";
+    if (empty($data_inicio)) $erros[] = "A Data de Início é obrigatória.";
+    if (empty($data_fim)) {
+        $erros[] = "A Data de Fim é obrigatória.";
+    } elseif (!empty($data_inicio) && $data_fim <= $data_inicio) {
+        $erros[] = "A Data de Fim deve ser posterior à Data de Início.";
+    }
+
+    // 4. Depuração: mostrar erros recolhidos
+    /*
+    echo "<pre>"; print_r($erros); echo "</pre>";
+    */
+
+    // 5. Normalizar entrada
+    $num_contrato = strtoupper($num_contrato);
+
+    /*
+    echo "<p><strong>Dados normalizados:</strong></p>";
+    echo "<ul>";
+    echo "<li>Nº Contrato: $num_contrato</li>";
+    echo "<li>Data Início: $data_inicio</li>";
+    echo "<li>Data Fim: $data_fim</li>";
+    echo "</ul>";
+    */
+}
 ?>
 <?php include '../../includes/header.php'; ?>
 <?php include '../../includes/nav.php'; ?>
@@ -15,6 +56,16 @@ redirect_if_not_logged();
                         <div class="card-body">
                             <h2 class="mb-4 fw-bold" style="color: #004f63;"><i class="fas fa-plus me-2"></i> Registar Garantia / Contrato</h2>
                             <hr>
+                            <?php if (!empty($erros)): ?>
+                                <div class="alert alert-danger">
+                                    <strong><i class="fas fa-triangle-exclamation me-2"></i>Por favor corrija os seguintes erros:</strong>
+                                    <ul class="mb-0 mt-2">
+                                        <?php foreach ($erros as $erro): ?>
+                                            <li><?= htmlspecialchars($erro) ?></li>
+                                        <?php endforeach; ?>
+                                    </ul>
+                                </div>
+                            <?php endif; ?>
                             <form action="#" method="post" novalidate id="formGarantia">
 
                                 <!-- SECÇÃO: Equipamento -->
@@ -121,7 +172,7 @@ redirect_if_not_logged();
                                     <i class="fas fa-note-sticky me-2"></i>Observações
                                 </h6>
                                 <div class="mb-3">
-                                    <textarea class="form-control" id="observacoes" name="observacoes" rows="3" placeholder="Informação adicional relevante sobre a garantia ou contrato..."></textarea>
+                                    <textarea class="form-control" id="observacoes" name="observacoes" rows="3" placeholder="Informação adicional relevante sobre a garantia ou contrato..."><?= htmlspecialchars($_POST['observacoes'] ?? '') ?></textarea>
                                 </div>
 
                                 <div class="d-flex justify-content-end gap-2 mt-4">
@@ -147,7 +198,6 @@ redirect_if_not_logged();
         }
 
         document.getElementById('formGarantia').addEventListener('submit', function (e) {
-            e.preventDefault();
             const obrigatorios = ['equipamento', 'data_inicio', 'data_fim'];
             let valido = true;
             obrigatorios.forEach(function (id) {
@@ -156,19 +206,20 @@ redirect_if_not_logged();
                 else { campo.classList.remove('is-invalid'); }
             });
             if (!valido) {
+                e.preventDefault();
                 document.getElementById('erroForm').classList.remove('d-none');
                 return;
             }
             const inicio = new Date(document.getElementById('data_inicio').value);
             const fim = new Date(document.getElementById('data_fim').value);
             if (fim <= inicio) {
+                e.preventDefault();
                 document.getElementById('data_fim').classList.add('is-invalid');
                 document.getElementById('erroForm').innerHTML = '<i class="fas fa-triangle-exclamation me-2"></i> A data de fim deve ser posterior à data de início.';
                 document.getElementById('erroForm').classList.remove('d-none');
                 return;
             }
-            alert('Garantia registada com sucesso!');
-            window.location.href = 'lista.php';
+            document.getElementById('erroForm').classList.add('d-none');
         });
     </script>
 

@@ -1,6 +1,78 @@
 <?php
 require_once __DIR__ . '/../../includes/funcoes.php';
 redirect_if_not_logged();
+
+$erros = [];
+
+if ($_SERVER["REQUEST_METHOD"] == "POST") {
+    // 1. Recolher dados
+    $codigo        = $_POST["codigo"] ?? "";
+    $designacao    = $_POST["designacao"] ?? "";
+    $categoria     = $_POST["categoria"] ?? "";
+    $estado        = $_POST["estado"] ?? "";
+    $criticidade   = $_POST["criticidade"] ?? "";
+    $marca         = $_POST["marca"] ?? "";
+    $modelo        = $_POST["modelo"] ?? "";
+    $fabricante    = $_POST["fabricante"] ?? "";
+    $num_serie     = $_POST["num_serie"] ?? "";
+    $ano_fabrico   = $_POST["ano_fabrico"] ?? "";
+    $data_aquisicao = $_POST["data_aquisicao"] ?? "";
+    $custo         = $_POST["custo"] ?? "";
+    $tipo_entrada  = $_POST["tipo_entrada"] ?? "";
+    $fornecedor    = $_POST["fornecedor"] ?? "";
+    $edificio      = $_POST["edificio"] ?? "";
+    $piso          = $_POST["piso"] ?? "";
+    $servico       = $_POST["servico"] ?? "";
+    $sala          = $_POST["sala"] ?? "";
+    $observacoes   = $_POST["observacoes"] ?? "";
+
+    // 2. Trim
+    $codigo     = trim($codigo);
+    $designacao = trim($designacao);
+    $marca      = trim($marca);
+    $modelo     = trim($modelo);
+    $num_serie  = trim($num_serie);
+    $servico    = trim($servico);
+
+    // 3. Validar
+    if (empty($codigo)) {
+        $erros[] = "O campo Código é obrigatório.";
+    }
+    if (empty($designacao)) {
+        $erros[] = "O campo Designação é obrigatório.";
+    } elseif (preg_match('/\d/', $designacao)) {
+        $erros[] = "O campo Designação não pode conter números.";
+    }
+    if (empty($categoria))   $erros[] = "O campo Categoria é obrigatório.";
+    if (empty($estado))      $erros[] = "O campo Estado é obrigatório.";
+    if (empty($criticidade)) $erros[] = "O campo Criticidade é obrigatório.";
+    if (empty($marca))       $erros[] = "O campo Marca é obrigatório.";
+    if (empty($modelo))      $erros[] = "O campo Modelo é obrigatório.";
+    if (empty($num_serie))   $erros[] = "O campo Número de Série é obrigatório.";
+    if (empty($servico))     $erros[] = "O campo Serviço / Departamento é obrigatório.";
+
+    // 4. Depuração: mostrar erros recolhidos
+    /*
+    echo "<pre>"; print_r($erros); echo "</pre>";
+    */
+
+    // 5. Normalizar entrada
+    $designacao = ucwords(strtolower($designacao));
+    $marca      = ucwords(strtolower($marca));
+    $modelo     = ucwords(strtolower($modelo));
+    $fabricante = ucwords(strtolower($fabricante));
+    $servico    = ucwords(strtolower($servico));
+
+    /*
+    echo "<p><strong>Dados normalizados:</strong></p>";
+    echo "<ul>";
+    echo "<li>Designação: $designacao</li>";
+    echo "<li>Marca: $marca</li>";
+    echo "<li>Modelo: $modelo</li>";
+    echo "<li>Serviço: $servico</li>";
+    echo "</ul>";
+    */
+}
 ?>
 <?php include '../../includes/header.php'; ?>
 <?php include '../../includes/nav.php'; ?>
@@ -18,17 +90,27 @@ redirect_if_not_logged();
                             <i class="fas fa-plus me-2"></i> Inserir Novo Equipamento
                         </h2>
                         <hr>
+                        <?php if (!empty($erros)): ?>
+                            <div class="alert alert-danger">
+                                <strong><i class="fas fa-triangle-exclamation me-2"></i>Por favor corrija os seguintes erros:</strong>
+                                <ul class="mb-0 mt-2">
+                                    <?php foreach ($erros as $erro): ?>
+                                        <li><?= htmlspecialchars($erro) ?></li>
+                                    <?php endforeach; ?>
+                                </ul>
+                            </div>
+                        <?php endif; ?>
                         <form action="#" method="post" novalidate id="formEquipamento">
 
                             <h5 class="fw-bold mb-3 mt-4" style="color: #007fa3;"><i class="fas fa-tag me-2"></i> Identificação</h5>
                             <div class="row mb-3">
                                 <div class="col-md-4">
                                     <label for="codigo" class="form-label fw-semibold">Código Interno <span class="text-danger">*</span></label>
-                                    <input type="text" class="form-control" id="codigo" name="codigo" placeholder="ex: 04.002.00" required>
+                                    <input type="text" class="form-control" id="codigo" name="codigo" placeholder="ex: 04.002.00" value="<?= htmlspecialchars($_POST['codigo'] ?? '') ?>" required>
                                 </div>
                                 <div class="col-md-8">
                                     <label for="designacao" class="form-label fw-semibold">Designação do Equipamento <span class="text-danger">*</span></label>
-                                    <input type="text" class="form-control" id="designacao" name="designacao" placeholder="Nome completo do equipamento" required>
+                                    <input type="text" class="form-control" id="designacao" name="designacao" placeholder="Nome completo do equipamento" value="<?= htmlspecialchars($_POST['designacao'] ?? '') ?>" required>
                                 </div>
                             </div>
                             <div class="row mb-3">
@@ -73,21 +155,21 @@ redirect_if_not_logged();
                             <div class="row mb-3">
                                 <div class="col-md-4">
                                     <label for="marca" class="form-label fw-semibold">Marca <span class="text-danger">*</span></label>
-                                    <input type="text" class="form-control" id="marca" name="marca" placeholder="ex: Philips" required>
+                                    <input type="text" class="form-control" id="marca" name="marca" placeholder="ex: Philips" value="<?= htmlspecialchars($_POST['marca'] ?? '') ?>" required>
                                 </div>
                                 <div class="col-md-4">
                                     <label for="modelo" class="form-label fw-semibold">Modelo <span class="text-danger">*</span></label>
-                                    <input type="text" class="form-control" id="modelo" name="modelo" placeholder="ex: IntelliVue MP5" required>
+                                    <input type="text" class="form-control" id="modelo" name="modelo" placeholder="ex: IntelliVue MP5" value="<?= htmlspecialchars($_POST['modelo'] ?? '') ?>" required>
                                 </div>
                                 <div class="col-md-4">
                                     <label for="fabricante" class="form-label fw-semibold">Fabricante</label>
-                                    <input type="text" class="form-control" id="fabricante" name="fabricante" placeholder="Nome do fabricante">
+                                    <input type="text" class="form-control" id="fabricante" name="fabricante" placeholder="Nome do fabricante" value="<?= htmlspecialchars($_POST['fabricante'] ?? '') ?>">
                                 </div>
                             </div>
                             <div class="row mb-3">
                                 <div class="col-md-4">
                                     <label for="num_serie" class="form-label fw-semibold">Número de Série <span class="text-danger">*</span></label>
-                                    <input type="text" class="form-control" id="num_serie" name="num_serie" placeholder="ex: MP5-2022-45873" required>
+                                    <input type="text" class="form-control" id="num_serie" name="num_serie" placeholder="ex: MP5-2022-45873" value="<?= htmlspecialchars($_POST['num_serie'] ?? '') ?>" required>
                                 </div>
                                 <div class="col-md-4">
                                     <label for="ano_fabrico" class="form-label fw-semibold">Ano de Fabrico</label>
@@ -130,26 +212,26 @@ redirect_if_not_logged();
                             <div class="row mb-3">
                                 <div class="col-md-3">
                                     <label for="edificio" class="form-label fw-semibold">Edifício</label>
-                                    <input type="text" class="form-control" id="edificio" name="edificio" placeholder="ex: Edifício Principal">
+                                    <input type="text" class="form-control" id="edificio" name="edificio" placeholder="ex: Edifício Principal" value="<?= htmlspecialchars($_POST['edificio'] ?? '') ?>">
                                 </div>
                                 <div class="col-md-3">
                                     <label for="piso" class="form-label fw-semibold">Piso</label>
-                                    <input type="text" class="form-control" id="piso" name="piso" placeholder="ex: Piso 2">
+                                    <input type="text" class="form-control" id="piso" name="piso" placeholder="ex: Piso 2" value="<?= htmlspecialchars($_POST['piso'] ?? '') ?>">
                                 </div>
                                 <div class="col-md-3">
                                     <label for="servico" class="form-label fw-semibold">Serviço / Departamento <span class="text-danger">*</span></label>
-                                    <input type="text" class="form-control" id="servico" name="servico" placeholder="ex: UCI" required>
+                                    <input type="text" class="form-control" id="servico" name="servico" placeholder="ex: UCI" value="<?= htmlspecialchars($_POST['servico'] ?? '') ?>" required>
                                 </div>
                                 <div class="col-md-3">
                                     <label for="sala" class="form-label fw-semibold">Sala / Gabinete</label>
-                                    <input type="text" class="form-control" id="sala" name="sala" placeholder="ex: Sala 203">
+                                    <input type="text" class="form-control" id="sala" name="sala" placeholder="ex: Sala 203" value="<?= htmlspecialchars($_POST['sala'] ?? '') ?>">
                                 </div>
                             </div>
 
                             <h5 class="fw-bold mb-3 mt-4" style="color: #007fa3;"><i class="fas fa-note-sticky me-2"></i> Observações</h5>
                             <div class="mb-4">
                                 <textarea class="form-control" id="observacoes" name="observacoes" rows="3"
-                                    placeholder="Informações adicionais relevantes sobre o equipamento..."></textarea>
+                                    placeholder="Informações adicionais relevantes sobre o equipamento..."><?= htmlspecialchars($_POST['observacoes'] ?? '') ?></textarea>
                             </div>
 
                             <div class="d-flex justify-content-end gap-2">
@@ -175,7 +257,6 @@ redirect_if_not_logged();
 
 <script>
     document.getElementById('formEquipamento').addEventListener('submit', function (e) {
-        e.preventDefault();
         const obrigatorios = ['codigo', 'designacao', 'categoria', 'estado', 'criticidade', 'marca', 'modelo', 'num_serie', 'servico'];
         let valido = true;
         obrigatorios.forEach(function (id) {
@@ -184,11 +265,10 @@ redirect_if_not_logged();
             else { campo.classList.remove('is-invalid'); }
         });
         if (!valido) {
+            e.preventDefault();
             document.getElementById('erroForm').classList.remove('d-none');
         } else {
             document.getElementById('erroForm').classList.add('d-none');
-            alert('Equipamento guardado com sucesso!');
-            window.location.href = 'lista.php';
         }
     });
 </script>
