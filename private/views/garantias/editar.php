@@ -1,6 +1,7 @@
 <?php
 require_once __DIR__ . '/../../includes/funcoes.php';
 redirect_if_not_logged();
+require_once __DIR__ . '/../../includes/validacoes.php';
 
 if (!in_array($_SERVER['REQUEST_METHOD'], ['GET', 'POST'])) {
     header('Location: ' . BASE_URL . '/public/login.php');
@@ -41,6 +42,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     $data_fim    = $_POST["data_fim"] ?? "";
     $tem_contrato = $_POST["tem_contrato"] ?? "nao";
 
+    /*
     if (empty($data_inicio)) {
         $erros[] = "A Data de Início é obrigatória.";
     } elseif (!preg_match('/^\d{4}-\d{2}-\d{2}$/', $data_inicio)) {
@@ -60,6 +62,12 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         } elseif (!empty($data_inicio) && $data_fim <= $data_inicio) {
             $erros[] = "A Data de Fim deve ser posterior à Data de Início.";
         }
+    }
+    */
+    $erros = validar_data_obrigatoria($data_inicio, 'Data de Início');
+    $erros = array_merge($erros, validar_data_obrigatoria($data_fim, 'Data de Fim'));
+    if (empty($erros) && !empty($data_inicio) && !empty($data_fim) && $data_fim <= $data_inicio) {
+        $erros[] = "A Data de Fim deve ser posterior à Data de Início.";
     }
 
     if (empty($erros)) {

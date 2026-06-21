@@ -1,6 +1,7 @@
 ﻿<?php
 require_once __DIR__ . '/../../includes/funcoes.php';
 redirect_if_not_logged();
+require_once __DIR__ . '/../../includes/validacoes.php';
 
 $erros = [];
 $erro_sistema = "";
@@ -20,6 +21,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     $nome_doc = trim($nome_doc);
 
     // 3. Validar
+    /*
     if (empty($tipo))        $erros[] = "O campo Tipo de Documento é obrigatório.";
     if (empty($nome_doc))    $erros[] = "O campo Nome do Documento é obrigatório.";
     if (empty($equipamento)) $erros[] = "O campo Equipamento Associado é obrigatório.";
@@ -38,6 +40,12 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
             }
         }
     }
+    */
+    $erros = validar_obrigatorio($tipo, 'Tipo de Documento');
+    $erros = array_merge($erros, validar_obrigatorio($nome_doc, 'Nome do Documento'));
+    $erros = array_merge($erros, validar_obrigatorio($equipamento, 'Equipamento Associado'));
+    $erros = array_merge($erros, validar_data_opcional($data_doc, 'Data do Documento'));
+    $erros = array_merge($erros, validar_data_validade($data_validade));
 
     // 4. Depuração: mostrar erros recolhidos
     /*

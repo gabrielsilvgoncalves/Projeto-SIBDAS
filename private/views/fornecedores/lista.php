@@ -75,30 +75,28 @@ $ligacao = null;
                                 <tr>
                                     <th>Nome da Empresa</th>
                                     <th>NIF</th>
-                                    <th>País</th>
                                     <th>Telefone</th>
                                     <th>Email</th>
-                                    <th>Cidade</th>
+                                    <th>Morada</th>
                                     <th class="text-center">Ações</th>
                                 </tr>
                             </thead>
                             <tbody id="tabelaCorpo">
                                 <?php if (!empty($erro)): ?>
-                                    <tr><td colspan="7" class="text-center text-danger py-3"><?= htmlspecialchars($erro) ?></td></tr>
+                                    <tr><td colspan="6" class="text-center text-danger py-3"><?= htmlspecialchars($erro) ?></td></tr>
                                 <?php elseif (empty($resultados)): ?>
-                                    <tr><td colspan="7" class="text-center text-muted py-3">Nenhum fornecedor encontrado.</td></tr>
+                                    <tr><td colspan="6" class="text-center text-muted py-3">Nenhum fornecedor encontrado.</td></tr>
                                 <?php else: foreach ($resultados as $f): ?>
                                 <tr>
                                     <td><strong><?= htmlspecialchars($f->nome) ?></strong></td>
                                     <td><?= htmlspecialchars($f->nif ?? '—') ?></td>
-                                    <td><?= htmlspecialchars($f->pais ?? '—') ?></td>
                                     <td><?= htmlspecialchars($f->telefone ?? '—') ?></td>
                                     <td><?= htmlspecialchars($f->email ?? '—') ?></td>
-                                    <td><?= htmlspecialchars($f->cidade ?? '—') ?></td>
+                                    <td><?= htmlspecialchars($f->morada ?? '—') ?></td>
                                     <td class="text-center">
-                                        <a href="detalhes.php?id=<?= $f->id ?>" class="btn btn-sm btn-outline-primary me-1" title="Ver"><i class="fas fa-eye"></i></a>
+                                        <a href="detalhes.php?id=<?= aes_encrypt($f->id) ?>" class="btn btn-sm btn-outline-primary me-1" title="Ver"><i class="fas fa-eye"></i></a>
                                         <a href="editar.php?id=<?= aes_encrypt($f->id) ?>" class="btn btn-sm btn-outline-warning me-1" title="Editar"><i class="fas fa-pen-to-square"></i></a>
-                                        <a href="apagar.php?id=<?= $f->id ?>" class="btn btn-sm btn-outline-danger" title="Remover"><i class="fas fa-trash-can"></i></a>
+                                        <a href="apagar.php?id=<?= aes_encrypt($f->id) ?>" class="btn btn-sm btn-outline-danger" title="Remover"><i class="fas fa-trash-can"></i></a>
                                     </td>
                                 </tr>
                                 <?php endforeach; endif; ?>

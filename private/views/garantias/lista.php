@@ -119,7 +119,7 @@ $em30dias = date('Y-m-d', strtotime('+30 days'));
                                     }
                                 ?>
                                 <tr>
-                                    <td><a href="../equipamentos/detalhes.php?id=<?= $g->id_equipamento ?>"><strong><?= htmlspecialchars($g->codigo) ?></strong> — <?= htmlspecialchars($g->designacao) ?></a></td>
+                                    <td><a href="../equipamentos/detalhes.php?id=<?= aes_encrypt($g->id_equipamento) ?>"><strong><?= htmlspecialchars($g->codigo) ?></strong> — <?= htmlspecialchars($g->designacao) ?></a></td>
                                     <td><?= date('d/m/Y', strtotime($g->data_inicio)) ?></td>
                                     <td class="<?= $fimClass ?>"><?= date('d/m/Y', strtotime($g->data_fim)) ?></td>
                                     <td><?= htmlspecialchars($g->tipo) ?></td>
@@ -127,9 +127,9 @@ $em30dias = date('Y-m-d', strtotime('+30 days'));
                                     <td><?= htmlspecialchars($g->fornecedor_nome ?? '—') ?></td>
                                     <td><?= $estadoBadge ?></td>
                                     <td class="text-center">
-                                        <a href="detalhes.php?id=<?= $g->id ?>" class="btn btn-sm btn-outline-info me-1"><i class="fas fa-eye"></i></a>
+                                        <a href="detalhes.php?id=<?= aes_encrypt($g->id) ?>" class="btn btn-sm btn-outline-info me-1"><i class="fas fa-eye"></i></a>
                                         <a href="editar.php?id=<?= aes_encrypt($g->id) ?>" class="btn btn-sm btn-outline-warning me-1"><i class="fas fa-pen-to-square"></i></a>
-                                        <a href="apagar.php?id=<?= $g->id ?>" class="btn btn-sm btn-outline-danger"><i class="fas fa-trash-can"></i></a>
+                                        <a href="apagar.php?id=<?= aes_encrypt($g->id) ?>" class="btn btn-sm btn-outline-danger"><i class="fas fa-trash-can"></i></a>
                                     </td>
                                 </tr>
                                 <?php endforeach; endif; ?>

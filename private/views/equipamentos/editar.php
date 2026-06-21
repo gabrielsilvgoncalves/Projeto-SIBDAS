@@ -1,6 +1,7 @@
 <?php
 require_once __DIR__ . '/../../includes/funcoes.php';
 redirect_if_not_logged();
+require_once __DIR__ . '/../../includes/validacoes.php';
 
 if (!in_array($_SERVER['REQUEST_METHOD'], ['GET', 'POST'])) {
     header('Location: ' . BASE_URL . '/public/login.php');
@@ -47,6 +48,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     $num_serie   = trim($_POST["num_serie"] ?? "");
     $data_aquisicao = $_POST["data_aquisicao"] ?? "";
 
+    /*
     if (empty($codigo))      $erros[] = "O campo Código é obrigatório.";
     if (empty($designacao)) {
         $erros[] = "O campo Designação é obrigatório.";
@@ -67,6 +69,16 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
             if (!checkdate((int)$p[1], (int)$p[2], (int)$p[0])) $erros[] = "Data de aquisição inválida.";
         }
     }
+    */
+    $erros = validar_obrigatorio($codigo, 'Código');
+    $erros = array_merge($erros, validar_designacao($designacao));
+    $erros = array_merge($erros, validar_obrigatorio($categoria, 'Categoria'));
+    $erros = array_merge($erros, validar_obrigatorio($estado, 'Estado'));
+    $erros = array_merge($erros, validar_obrigatorio($criticidade, 'Criticidade'));
+    $erros = array_merge($erros, validar_obrigatorio($marca, 'Marca'));
+    $erros = array_merge($erros, validar_obrigatorio($modelo, 'Modelo'));
+    $erros = array_merge($erros, validar_obrigatorio($num_serie, 'Número de Série'));
+    $erros = array_merge($erros, validar_data_opcional($data_aquisicao, 'Data de Aquisição'));
 
     if (empty($erros)) {
         try {

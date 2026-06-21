@@ -1,6 +1,7 @@
 <?php
 require_once __DIR__ . '/../../includes/funcoes.php';
 redirect_if_not_logged();
+require_once __DIR__ . '/../../includes/validacoes.php';
 
 if (!in_array($_SERVER['REQUEST_METHOD'], ['GET', 'POST'])) {
     header('Location: ' . BASE_URL . '/public/login.php');
@@ -52,6 +53,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     ];
     $tipo_db = $tiposMap[$tipo] ?? 'Outro';
 
+    /*
     if (empty($tipo))     $erros[] = "O campo Tipo de Documento é obrigatório.";
     if (empty($nome_doc)) $erros[] = "O campo Nome do Documento é obrigatório.";
     if (!empty($data_doc)) {
@@ -62,6 +64,10 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
             if (!checkdate((int)$p[1], (int)$p[2], (int)$p[0])) $erros[] = "Data do documento inválida.";
         }
     }
+    */
+    $erros = validar_obrigatorio($tipo, 'Tipo de Documento');
+    $erros = array_merge($erros, validar_obrigatorio($nome_doc, 'Nome do Documento'));
+    $erros = array_merge($erros, validar_data_opcional($data_doc, 'Data do Documento'));
 
     if (empty($erros)) {
         try {

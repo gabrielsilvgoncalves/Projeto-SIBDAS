@@ -152,9 +152,9 @@ $ligacao = null;
                                         <td><span class="estado-badge <?= $estadoClass ?>"><?= htmlspecialchars($eq->estado) ?></span></td>
                                         <td><span class="critico-badge <?= $criticoClass ?>"><?= htmlspecialchars($eq->criticidade) ?></span></td>
                                         <td class="text-center">
-                                            <a href="detalhes.php?id=<?= $eq->id ?>" class="btn btn-sm btn-outline-primary me-1" title="Ver detalhes"><i class="fas fa-eye"></i></a>
+                                            <a href="detalhes.php?id=<?= aes_encrypt($eq->id) ?>" class="btn btn-sm btn-outline-primary me-1" title="Ver detalhes"><i class="fas fa-eye"></i></a>
                                             <a href="editar.php?id=<?= aes_encrypt($eq->id) ?>" class="btn btn-sm btn-outline-warning me-1" title="Editar"><i class="fas fa-pen-to-square"></i></a>
-                                            <a href="apagar.php?id=<?= $eq->id ?>" class="btn btn-sm btn-outline-danger" title="Remover"><i class="fas fa-trash-can"></i></a>
+                                            <a href="apagar.php?id=<?= aes_encrypt($eq->id) ?>" class="btn btn-sm btn-outline-danger" title="Remover"><i class="fas fa-trash-can"></i></a>
                                         </td>
                                     </tr>
                                     <?php endforeach; ?>

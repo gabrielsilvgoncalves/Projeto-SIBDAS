@@ -95,13 +95,13 @@ $ligacao = null;
                                 <tr>
                                     <td><span class="badge bg-secondary"><?= htmlspecialchars($d->tipo) ?></span></td>
                                     <td><?= htmlspecialchars($d->titulo) ?></td>
-                                    <td><a href="../equipamentos/detalhes.php?id=<?= $d->id_equipamento ?>"><?= htmlspecialchars($d->codigo) ?> — <?= htmlspecialchars($d->designacao) ?></a></td>
+                                    <td><a href="../equipamentos/detalhes.php?id=<?= aes_encrypt($d->id_equipamento) ?>"><?= htmlspecialchars($d->codigo) ?> — <?= htmlspecialchars($d->designacao) ?></a></td>
                                     <td><?= $d->data_documento ? date('d/m/Y', strtotime($d->data_documento)) : '—' ?></td>
                                     <td class="text-muted">—</td>
                                     <td class="text-center">
-                                        <a href="detalhes.php?id=<?= $d->id ?>" class="btn btn-sm btn-outline-info me-1"><i class="fas fa-eye"></i></a>
+                                        <a href="detalhes.php?id=<?= aes_encrypt($d->id) ?>" class="btn btn-sm btn-outline-info me-1"><i class="fas fa-eye"></i></a>
                                         <a href="editar.php?id=<?= aes_encrypt($d->id) ?>" class="btn btn-sm btn-outline-warning me-1"><i class="fas fa-pen-to-square"></i></a>
-                                        <a href="apagar.php?id=<?= $d->id ?>" class="btn btn-sm btn-outline-danger"><i class="fas fa-trash-can"></i></a>
+                                        <a href="apagar.php?id=<?= aes_encrypt($d->id) ?>" class="btn btn-sm btn-outline-danger"><i class="fas fa-trash-can"></i></a>
                                     </td>
                                 </tr>
                                 <?php endforeach; endif; ?>

@@ -1,6 +1,7 @@
 <?php
 require_once __DIR__ . '/../../includes/funcoes.php';
 redirect_if_not_logged();
+require_once __DIR__ . '/../../includes/validacoes.php';
 
 $erros = [];
 $erro_sistema = "";
@@ -36,6 +37,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     $servico    = trim($servico);
 
     // 3. Validar
+    /*
     if (empty($codigo)) {
         $erros[] = "O campo Código é obrigatório.";
     }
@@ -61,6 +63,17 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
             }
         }
     }
+    */
+    $erros = validar_obrigatorio($codigo, 'Código');
+    $erros = array_merge($erros, validar_designacao($designacao));
+    $erros = array_merge($erros, validar_obrigatorio($categoria, 'Categoria'));
+    $erros = array_merge($erros, validar_obrigatorio($estado, 'Estado'));
+    $erros = array_merge($erros, validar_obrigatorio($criticidade, 'Criticidade'));
+    $erros = array_merge($erros, validar_obrigatorio($marca, 'Marca'));
+    $erros = array_merge($erros, validar_obrigatorio($modelo, 'Modelo'));
+    $erros = array_merge($erros, validar_obrigatorio($num_serie, 'Número de Série'));
+    $erros = array_merge($erros, validar_obrigatorio($servico, 'Serviço / Departamento'));
+    $erros = array_merge($erros, validar_data_opcional($data_aquisicao, 'Data de Aquisição'));
 
     // 4. Depuração: mostrar erros recolhidos
     /*

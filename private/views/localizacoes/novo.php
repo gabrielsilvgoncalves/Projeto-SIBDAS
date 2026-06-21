@@ -1,6 +1,7 @@
 ﻿<?php
 require_once __DIR__ . '/../../includes/funcoes.php';
 redirect_if_not_logged();
+require_once __DIR__ . '/../../includes/validacoes.php';
 
 $erros = [];
 $erro_sistema = "";
@@ -16,7 +17,10 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     $servico = trim($servico);
 
     // 3. Validar
+    /*
     if (empty($servico)) $erros[] = "O campo Serviço / Departamento é obrigatório.";
+    */
+    $erros = validar_obrigatorio($servico, 'Serviço / Departamento');
 
     // 4. Depuração: mostrar erros recolhidos
     /*

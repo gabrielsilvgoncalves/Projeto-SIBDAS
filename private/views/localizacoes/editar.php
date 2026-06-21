@@ -1,6 +1,7 @@
 <?php
 require_once __DIR__ . '/../../includes/funcoes.php';
 redirect_if_not_logged();
+require_once __DIR__ . '/../../includes/validacoes.php';
 
 if (!in_array($_SERVER['REQUEST_METHOD'], ['GET', 'POST'])) {
     header('Location: ' . BASE_URL . '/public/login.php');
@@ -36,7 +37,10 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     $servico  = ucwords(strtolower(trim($_POST["servico"] ?? "")));
     $sala     = trim($_POST["sala"] ?? "");
 
+    /*
     if (empty($servico)) $erros[] = "O campo Serviço / Departamento é obrigatório.";
+    */
+    $erros = validar_obrigatorio($servico, 'Serviço / Departamento');
 
     if (empty($erros)) {
         try {

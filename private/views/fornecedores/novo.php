@@ -1,6 +1,7 @@
 ﻿<?php
 require_once __DIR__ . '/../../includes/funcoes.php';
 redirect_if_not_logged();
+require_once __DIR__ . '/../../includes/validacoes.php';
 
 $erros = [];
 $erro_sistema = "";
@@ -25,6 +26,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     $email    = trim($email);
 
     // 3. Validar
+    /*
     if (empty($nome)) {
         $erros[] = "O campo Nome é obrigatório.";
     } elseif (preg_match('/\d/', $nome)) {
@@ -42,6 +44,12 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     if (!empty($email) && !filter_var($email, FILTER_VALIDATE_EMAIL)) {
         $erros[] = "O endereço de email não é válido.";
     }
+    */
+    $erros = validar_nome($nome);
+    $erros = array_merge($erros, validar_nif($nif));
+    $erros = array_merge($erros, validar_obrigatorio($tipo, 'Tipo de Fornecedor'));
+    $erros = array_merge($erros, validar_telefone_opcional($telefone));
+    $erros = array_merge($erros, validar_email_opcional($email));
 
     // 4. Depuração: mostrar erros recolhidos
     /*

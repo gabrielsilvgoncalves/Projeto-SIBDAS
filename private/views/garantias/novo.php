@@ -1,6 +1,7 @@
 ﻿<?php
 require_once __DIR__ . '/../../includes/funcoes.php';
 redirect_if_not_logged();
+require_once __DIR__ . '/../../includes/validacoes.php';
 
 $erros = [];
 $erro_sistema = "";
@@ -18,6 +19,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     $observacoes   = $_POST["observacoes"] ?? "";
 
     // 3. Validar
+    /*
     if (empty($equipamento)) $erros[] = "O campo Equipamento é obrigatório.";
     if (empty($data_inicio)) {
         $erros[] = "A Data de Início é obrigatória.";
@@ -40,6 +42,13 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         } elseif (!empty($data_inicio) && $data_fim <= $data_inicio) {
             $erros[] = "A Data de Fim deve ser posterior à Data de Início.";
         }
+    }
+    */
+    $erros = validar_obrigatorio($equipamento, 'Equipamento');
+    $erros = array_merge($erros, validar_data_obrigatoria($data_inicio, 'Data de Início'));
+    $erros = array_merge($erros, validar_data_obrigatoria($data_fim, 'Data de Fim'));
+    if (empty($erros) && !empty($data_inicio) && !empty($data_fim) && $data_fim <= $data_inicio) {
+        $erros[] = "A Data de Fim deve ser posterior à Data de Início.";
     }
 
     // 4. Depuração: mostrar erros recolhidos
