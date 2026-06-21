@@ -23,18 +23,6 @@ try {
     die("Erro de ligação: " . $err->getMessage());
 }
 
-if ($_SERVER['REQUEST_METHOD'] === 'POST' && ($_POST['confirmar'] ?? '') === '1') {
-    try {
-        $stmt = $ligacao->prepare("UPDATE documentos SET deleted_at = NOW() WHERE id = :id");
-        $stmt->execute([':id' => $id]);
-        $ligacao = null;
-        header('Location: lista.php');
-        exit;
-    } catch (PDOException $err) {
-        die("Erro ao remover: " . $err->getMessage());
-    }
-}
-
 $ligacao = null;
 ?>
 <?php include '../../includes/header.php'; ?>
@@ -60,12 +48,9 @@ $ligacao = null;
 
                 <div class="botoes mt-4">
                     <a href="lista.php" class="botao-cancelar"><i class="fas fa-xmark me-1"></i> Cancelar</a>
-                    <form method="post" action="apagar.php?id=<?= aes_encrypt($id) ?>" class="d-inline">
-                        <input type="hidden" name="confirmar" value="1">
-                        <button type="submit" class="botao-confirmar">
-                            <i class="fas fa-trash-can me-1"></i> Confirmar Remoção
-                        </button>
-                    </form>
+                    <a href="confirmar_apagar.php?id=<?= urlencode($idEncrypted) ?>" class="botao-confirmar">
+                        <i class="fas fa-trash-can me-1"></i> Confirmar Remoção
+                    </a>
                 </div>
             </div>
         </main>

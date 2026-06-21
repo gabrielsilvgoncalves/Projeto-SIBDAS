@@ -37,7 +37,7 @@ if (!empty($_SESSION['server_error'])) {
 
                 <p class="text-center text-muted small mb-4">Introduza as suas credenciais para aceder ao sistema.</p>
 
-                <form action="../private/processa_login.php" method="post" id="formLogin" novalidate>
+                <form name="formulario" action="../private/processa_login.php" method="post" id="formLogin" novalidate>
                     <div class="mb-3">
                         <label for="utilizador" class="form-label fw-semibold">
                             <i class="fa-regular fa-user me-1"></i> Utilizador
@@ -62,6 +62,12 @@ if (!empty($_SESSION['server_error'])) {
                         <a href="/SIBDAS_projeto_final/public/index.php" class="btn btn-outline-secondary btn-sm">
                             <i class="fa-solid fa-arrow-left me-1"></i> Voltar ao início
                         </a>
+                    </div>
+
+                    <!-- Botões de preenchimento automático (Fase de Testes) -->
+                    <div class="mt-2 text-center">
+                        <button type="button" id="preencher_adm" class="btn btn-outline-primary btn-sm me-2">Preencher Admin</button>
+                        <button type="button" id="preencher_agnt" class="btn btn-outline-secondary btn-sm">Preencher Agente</button>
                     </div>
 
                     <!-- -------------------------------------------------------------------- -->
@@ -99,6 +105,18 @@ if (!empty($_SESSION['server_error'])) {
                 e.preventDefault();
                 document.getElementById('erroLogin').classList.remove('d-none');
             }
+        });
+
+        // Preenchimento automático para testes
+        document.querySelector("#preencher_adm").addEventListener('click', () => {
+            const formulario = document.forms['formulario'];
+            formulario['text_username'].value = "admin@medstock.pt";
+            formulario['text_password'].value = "654321";
+        });
+        document.querySelector("#preencher_agnt").addEventListener('click', () => {
+            const formulario = document.forms['formulario'];
+            formulario['text_username'].value = "agente1@hospital.pt";
+            formulario['text_password'].value = "123456";
         });
     </script>
 

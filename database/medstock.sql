@@ -193,3 +193,24 @@ INSERT INTO `garantias` (`id`, `id_equipamento`, `id_fornecedor`, `data_inicio`,
 /*!40014 SET FOREIGN_KEY_CHECKS=IFNULL(@OLD_FOREIGN_KEY_CHECKS, 1) */;
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
 /*!40111 SET SQL_NOTES=IFNULL(@OLD_SQL_NOTES, 1) */;
+
+CREATE TABLE IF NOT EXISTS agents (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    name VARCHAR(100) NOT NULL,
+    passwrd VARCHAR(255) NOT NULL,
+    profile VARCHAR(50) NOT NULL,
+    first_name VARCHAR(100) NULL,
+    last_name VARCHAR(100) NULL,
+    phone VARCHAR(20) NULL,
+    created_at DATETIME NOT NULL DEFAULT NOW(),
+    last_login DATETIME NULL,
+    token VARCHAR(255) NULL
+);
+
+ALTER TABLE agents MODIFY COLUMN name VARBINARY(255) NOT NULL;
+
+TRUNCATE agents;
+INSERT INTO agents VALUES(0, AES_ENCRYPT('admin@medstock.pt', 'Vduu47qL51hLn6bkYkY6NlO1nivsmdfD'), '654321', 'admin', NULL, NULL, NULL, NOW(), NULL, NULL);
+INSERT INTO agents VALUES(0, AES_ENCRYPT('agente1@hospital.pt', 'Vduu47qL51hLn6bkYkY6NlO1nivsmdfD'), '123456', 'agent', NULL, NULL, NULL, NOW(), NULL, NULL);
+INSERT INTO agents VALUES(0, AES_ENCRYPT('agente2@hospital.pt', 'Vduu47qL51hLn6bkYkY6NlO1nivsmdfD'), '234567', 'agent', NULL, NULL, NULL, NOW(), NULL, NULL);
+INSERT INTO agents VALUES(0, AES_ENCRYPT('agente3@hospital.pt', 'Vduu47qL51hLn6bkYkY6NlO1nivsmdfD'), '345678', 'agent', NULL, NULL, NULL, NOW(), NULL, NULL);

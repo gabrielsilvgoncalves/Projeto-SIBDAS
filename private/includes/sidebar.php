@@ -5,6 +5,7 @@
         <a href="/SIBDAS_projeto_final/private/index.php" class="nav-link text-white px-2 mb-1 d-block rounded">
             <i class="fas fa-tachometer-alt me-2"></i> Dashboard
         </a>
+        <?php if ($_SESSION['profile'] == 'admin') : ?>
         <a href="/SIBDAS_projeto_final/private/views/equipamentos/lista.php" class="nav-link text-white px-2 mb-1 d-block rounded">
             <i class="fas fa-stethoscope me-2"></i> Equipamentos
         </a>
@@ -23,5 +24,17 @@
         <a href="/SIBDAS_projeto_final/private/views/backoffice/conteudo.php" class="nav-link text-white px-2 mb-1 d-block rounded">
             <i class="fas fa-globe me-2"></i> Área Pública
         </a>
+        <?php endif; ?>
+        <?php if ($_SESSION['profile'] == 'agent') : ?>
+        <a href="/SIBDAS_projeto_final/private/views/equipamentos/lista.php" class="nav-link text-white px-2 mb-1 d-block rounded">
+            <i class="fas fa-stethoscope me-2"></i> Equipamentos
+        </a>
+        <a href="/SIBDAS_projeto_final/private/views/documentos/lista.php" class="nav-link text-white px-2 mb-1 d-block rounded">
+            <i class="fas fa-file-medical me-2"></i> Documentos
+        </a>
+        <a href="/SIBDAS_projeto_final/private/views/garantias/lista.php" class="nav-link text-white px-2 mb-1 d-block rounded">
+            <i class="fas fa-shield-alt me-2"></i> Garantias
+        </a>
+        <?php endif; ?>
     </nav>
 </aside>

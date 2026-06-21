@@ -20,6 +20,13 @@ try {
         LEFT JOIN fornecedores f ON g.id_fornecedor = f.id
         ORDER BY g.data_fim ASC
     ")->fetchAll(PDO::FETCH_OBJ);
+    $totalAExpirar = (int) $ligacao->query("
+        SELECT COUNT(*) FROM garantias
+        WHERE data_fim >= CURDATE() AND data_fim <= DATE_ADD(CURDATE(), INTERVAL 30 DAY)
+    ")->fetchColumn();
+    $totalExpiradas = (int) $ligacao->query("
+        SELECT COUNT(*) FROM garantias WHERE data_fim < CURDATE()
+    ")->fetchColumn();
     $erro = '';
 } catch (PDOException $err) {
     $erro = "Aconteceu um erro na ligação.";
@@ -43,11 +50,31 @@ $em30dias = date('Y-m-d', strtotime('+30 days'));
             </div>
             <hr>
 
-            <!-- ALERTA VISUAL -->
+            <!-- ALERTAS VISUAIS -->
+            <?php if ($totalExpiradas > 0): ?>
+            <div class="alert alert-danger d-flex align-items-center mb-2 py-2" role="alert">
+                <i class="fas fa-triangle-exclamation me-2 fs-5"></i>
+                <div>
+                    <strong><?= $totalExpiradas ?> <?= $totalExpiradas === 1 ? 'garantia expirada' : 'garantias expiradas' ?></strong>
+                    — requerem atenção imediata.
+                </div>
+            </div>
+            <?php endif; ?>
+            <?php if ($totalAExpirar > 0): ?>
             <div class="alert alert-warning d-flex align-items-center mb-3 py-2" role="alert">
                 <i class="fas fa-clock me-2 fs-5"></i>
-                <div><strong>12 garantias</strong> a expirar nos próximos 30 dias. <a href="#" class="alert-link">Ver detalhes</a></div>
+                <div>
+                    <strong><?= $totalAExpirar ?> <?= $totalAExpirar === 1 ? 'garantia expira' : 'garantias expiram' ?></strong>
+                    nos próximos 30 dias.
+                </div>
             </div>
+            <?php endif; ?>
+            <?php if ($totalExpiradas === 0 && $totalAExpirar === 0): ?>
+            <div class="alert alert-success d-flex align-items-center mb-3 py-2" role="alert">
+                <i class="fas fa-circle-check me-2 fs-5"></i>
+                <div>Todas as garantias estão <strong>válidas</strong> e sem expiração iminente.</div>
+            </div>
+            <?php endif; ?>
 
             <!-- FILTROS -->
             <div class="card border-0 shadow-sm mb-3">
